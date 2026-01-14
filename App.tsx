@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useI18n } from './services/i18n';
 import { GAME_PHASES } from './constants';
 import { GameSettings, ExpansionId, GameResult } from './types';
 import PhaseCard from './components/PhaseCard';
@@ -22,13 +23,15 @@ const formatTime = (totalSeconds: number) => {
   return `${pad(minutes)}:${pad(seconds)}`;
 };
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('de-DE', {
-    day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
-  });
-};
-
 const App: React.FC = () => {
+  const { t, language, setLanguage } = useI18n();
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US', {
+      day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
+    });
+  };
+
   // Game State
   const [hasStarted, setHasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -111,7 +114,7 @@ const App: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (window.confirm("Möchtest du das Spiel wirklich abbrechen (ohne Wertung) und zur Auswahl zurückkehren?")) {
+    if (window.confirm(t('common.confirm_reset'))) {
       fullReset();
     }
   };
@@ -147,7 +150,7 @@ const App: React.FC = () => {
 
   const deleteHistoryItem = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm('Eintrag löschen?')) {
+    if (window.confirm(t('common.confirm_delete'))) {
       const newHistory = history.filter(h => h.id !== id);
       setHistory(newHistory);
       localStorage.setItem('spirit-island-history', JSON.stringify(newHistory));
@@ -187,7 +190,7 @@ const App: React.FC = () => {
         const importedData = JSON.parse(content);
 
         if (Array.isArray(importedData)) {
-          if (window.confirm(`${importedData.length} Spiele gefunden. Möchtest du diese zu deinem Verlauf hinzufügen?`)) {
+          if (window.confirm(t('history.import_found', { count: importedData.length }))) {
             // merge logic - filter out duplicates by id if they exist
             const existingIds = new Set(history.map(h => h.id));
             const newItems = importedData.filter(item => item && item.id && !existingIds.has(item.id));
@@ -195,10 +198,10 @@ const App: React.FC = () => {
 
             setHistory(mergedHistory);
             localStorage.setItem('spirit-island-history', JSON.stringify(mergedHistory));
-            alert(`${newItems.length} neue Spiele wurden importiert.`);
+            alert(t('history.import_success', { count: newItems.length }));
           }
         } else {
-          alert("Ungültiges Format. Die Datei muss ein Array von Spielen enthalten.");
+          alert(t('history.import_error_format'));
         }
       } catch (error) {
         console.error("Import failed", error);
@@ -225,8 +228,23 @@ const App: React.FC = () => {
               <Flower2 className="w-4 h-4 md:w-5 md:h-5" />
             </div>
             <h1 className="font-serif text-lg md:text-xl font-bold tracking-wider text-stone-700">
-              Spirit Island <span className="text-teal-600 font-normal hidden xs:inline">Tracker</span>
+              {t('header.title_main')} <span className="text-teal-600 font-normal hidden xs:inline">{t('header.title_sub')}</span>
             </h1>
+          </div>
+
+          <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg border border-stone-200 text-[10px] font-bold">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 rounded transition-colors ${language === 'en' ? 'bg-white shadow-sm text-teal-600' : 'text-stone-400 hover:text-stone-600'}`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage('de')}
+              className={`px-2 py-1 rounded transition-colors ${language === 'de' ? 'bg-white shadow-sm text-teal-600' : 'text-stone-400 hover:text-stone-600'}`}
+            >
+              DE
+            </button>
           </div>
 
           {/* Center: Timer (only Desktop) */}
@@ -239,7 +257,7 @@ const App: React.FC = () => {
               <button
                 onClick={togglePause}
                 className="ml-0.5 p-1 rounded-full hover:bg-stone-200 text-stone-500 transition-colors"
-                title={isPaused ? "Fortsetzen" : "Pause"}
+                title={isPaused ? t('header.timer_resume') : t('header.timer_pause')}
                 disabled={showScoring}
               >
                 {isPaused || showScoring ? <Play className="w-3 h-3 fill-current" /> : <Pause className="w-3 h-3 fill-current" />}
@@ -251,7 +269,7 @@ const App: React.FC = () => {
           <div className="flex items-center gap-2 md:gap-6">
             {hasStarted && (
               <div className="hidden md:flex flex-col items-end">
-                <span className="text-[9px] uppercase tracking-widest text-stone-500 font-bold">Rd</span>
+                <span className="text-[9px] uppercase tracking-widest text-stone-500 font-bold">{t('common.round_short')}</span>
                 <span className="font-serif text-lg text-teal-700 leading-none font-bold">{round}</span>
               </div>
             )}
@@ -261,7 +279,7 @@ const App: React.FC = () => {
                 <button
                   onClick={() => setShowScoring(true)}
                   className="p-1.5 md:p-2 text-stone-600 hover:text-emerald-600 hover:bg-emerald-50 transition-colors rounded-lg"
-                  title="Spiel beenden & Werten"
+                  title={t('header.end_game')}
                 >
                   <Flag className="w-5 h-5" />
                 </button>
@@ -270,7 +288,7 @@ const App: React.FC = () => {
                 <button
                   onClick={() => setShowSettings(true)}
                   className="p-1.5 md:p-2 text-stone-600 hover:text-amber-600 hover:bg-amber-50 transition-colors rounded-lg"
-                  title="Einstellungen"
+                  title={t('header.settings')}
                 >
                   <Settings className="w-5 h-5" />
                 </button>
@@ -279,7 +297,7 @@ const App: React.FC = () => {
                 <button
                   onClick={handleReset}
                   className="p-1.5 md:p-2 text-stone-600 hover:text-red-500 hover:bg-red-50 transition-colors rounded-lg"
-                  title="Abbrechen / Reset"
+                  title={t('header.reset')}
                 >
                   <RotateCcw className="w-5 h-5" />
                 </button>
@@ -293,7 +311,7 @@ const App: React.FC = () => {
           <div className="md:hidden flex justify-between items-center px-4 py-1.5 border-t border-stone-200 bg-white/40">
             {/* Round Counter */}
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">RUNDE</span>
+              <span className="text-[10px] uppercase tracking-widest text-stone-500 font-bold">{t('common.round')}</span>
               <span className="font-serif text-lg text-teal-700 font-bold leading-none">{round}</span>
             </div>
 
@@ -342,7 +360,7 @@ const App: React.FC = () => {
               className="group flex items-center gap-2 px-4 md:px-6 py-3 rounded-full bg-white border border-stone-300 text-stone-500 hover:text-stone-800 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 shadow-sm"
             >
               <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 md:group-hover:-translate-x-1 transition-transform" />
-              <span className="font-bold tracking-wide text-sm md:text-base">ZURÜCK</span>
+              <span className="font-bold tracking-wide text-sm md:text-base">{t('common.back')}</span>
             </button>
 
             <button
@@ -350,7 +368,7 @@ const App: React.FC = () => {
               className="group flex-1 max-w-[280px] flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-gradient-to-r from-teal-600 to-teal-500 text-white shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 md:hover:scale-105 transition-all active:scale-95"
             >
               <span className="font-bold tracking-wider md:tracking-widest text-base md:text-lg whitespace-nowrap">
-                {phaseIndex === activePhases.length - 1 ? "NÄCHSTE RUNDE" : "NÄCHSTE PHASE"}
+                {phaseIndex === activePhases.length - 1 ? t('common.next_round') : t('common.next_phase')}
               </span>
               <ChevronRight className="w-5 h-5 md:w-6 md:h-6 md:group-hover:translate-x-1 transition-transform" />
             </button>
@@ -360,14 +378,14 @@ const App: React.FC = () => {
           {isPaused && !showScoring && (
             <div className="fixed inset-0 z-40 flex flex-col items-center justify-center pointer-events-auto backdrop-blur-sm bg-white/30">
               <div className="text-4xl md:text-6xl font-serif text-stone-800 mb-6 drop-shadow-sm font-bold">
-                Zeit angehalten
+                {t('header.paused_overlay')}
               </div>
               <button
                 onClick={togglePause}
                 className="px-8 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-2 shadow-xl hover:scale-105 transition-all"
               >
                 <Play className="w-5 h-5 fill-current" />
-                Spiel fortsetzen
+                {t('header.resume_button')}
               </button>
             </div>
           )}
@@ -385,18 +403,18 @@ const App: React.FC = () => {
                 <Map className="w-10 h-10" />
               </div>
               <h2 className="text-4xl md:text-6xl font-serif text-stone-800 leading-tight font-black">
-                Spirit Island <br />
-                <span className="text-teal-600 text-3xl md:text-5xl font-normal italic">Expeditions-Tracker</span>
+                {t('header.title_main')} <br />
+                <span className="text-teal-600 text-3xl md:text-5xl font-normal italic">{t('header.title_sub')}</span>
               </h2>
               <p className="text-stone-600 text-lg max-w-lg mx-auto leading-relaxed">
-                Verwalte deine Geister, verfolge die Phasen und beschütze die Insel vor den Invasoren.
+                {t('phases.spirit-growth.desc')}
               </p>
               <button
                 onClick={() => setShowSettings(true)}
                 className="px-10 py-5 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 text-white font-serif font-bold text-xl shadow-xl shadow-amber-900/20 hover:scale-105 hover:shadow-amber-900/30 transition-all flex items-center gap-3 mx-auto"
               >
                 <Play className="w-6 h-6 fill-current" />
-                Expedition beginnen
+                {t('common.start_game')}
               </button>
             </div>
           </div>
@@ -406,26 +424,26 @@ const App: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <h3 className="text-2xl font-serif text-stone-700 flex items-center gap-3">
                 <Clock className="w-6 h-6 text-stone-400" />
-                Vergangene Spiele
+                {t('history.title')}
               </h3>
               <div className="flex items-center gap-2">
                 {history.length > 0 && (
                   <button
                     onClick={exportHistory}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-stone-200 text-stone-600 hover:text-teal-600 hover:border-teal-200 transition-all text-sm font-medium shadow-sm"
-                    title="Verlauf exportieren"
+                    title={t('history.export')}
                   >
                     <Download className="w-4 h-4" />
-                    Export
+                    {t('history.export')}
                   </button>
                 )}
                 <button
                   onClick={handleImportClick}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-stone-200 text-stone-600 hover:text-amber-600 hover:border-amber-200 transition-all text-sm font-medium shadow-sm"
-                  title="Verlauf importieren"
+                  title={t('history.import')}
                 >
                   <Upload className="w-4 h-4" />
-                  Import
+                  {t('history.import')}
                 </button>
                 <input
                   type="file"
@@ -456,21 +474,29 @@ const App: React.FC = () => {
                       <div>
                         <div className="flex items-center gap-3 mb-1">
                           <span className={`font-serif font-bold text-lg ${game.outcome === 'victory' ? 'text-amber-600' : 'text-stone-500'}`}>
-                            {game.score} Punkte
+                            {game.score} {t('common.points')}
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-stone-100 text-stone-500 text-[10px] font-bold uppercase tracking-wider">
-                            Stufe {game.difficulty}
+                            {t('settings.level')} {game.difficulty}
                           </span>
                         </div>
                         <div className="text-xs text-stone-400 flex flex-wrap items-center gap-x-2 gap-y-1 font-medium">
                           <span>{formatDate(game.date)}</span>
                           <span>•</span>
-                          <span>{game.playerCount} Spieler</span>
+                          <span>{game.playerCount} {t('common.players')}</span>
                           <span>•</span>
                           <span>{game.duration}</span>
                           {(game.adversary || game.scenario) && <span>•</span>}
-                          {game.adversary && <span className="text-amber-700 bg-amber-50 px-1 rounded">{game.adversary.name} (Lvl {game.adversary.level})</span>}
-                          {game.scenario && <span className="text-teal-700 bg-teal-50 px-1 rounded">{game.scenario}</span>}
+                          {game.adversary && (
+                            <span className="text-amber-700 bg-amber-50 px-1 rounded">
+                              {game.adversary.id ? t(`adversaries.${game.adversary.id}`) : game.adversary.name} (Lvl {game.adversary.level})
+                            </span>
+                          )}
+                          {(game.scenarioId || game.scenario) && (
+                            <span className="text-teal-700 bg-teal-50 px-1 rounded">
+                              {game.scenarioId ? t(`scenarios.${game.scenarioId}`) : game.scenario}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -478,11 +504,14 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-4">
                       {game.spirits.length > 0 && (
                         <div className="hidden sm:flex -space-x-2 mr-2">
-                          {game.spirits.slice(0, 3).map((s, i) => (
-                            <div key={i} className="w-8 h-8 rounded-full bg-stone-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-stone-600 overflow-hidden shadow-sm" title={s.name}>
-                              {s.name.charAt(0)}
-                            </div>
-                          ))}
+                          {game.spirits.slice(0, 3).map((s, i) => {
+                            const localizedName = t(`spirits.${s.id}`) || s.id;
+                            return (
+                              <div key={i} className="w-8 h-8 rounded-full bg-stone-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-stone-600 overflow-hidden shadow-sm" title={localizedName}>
+                                {localizedName.charAt(0)}
+                              </div>
+                            );
+                          })}
                           {game.spirits.length > 3 && (
                             <div className="w-8 h-8 rounded-full bg-stone-200 border-2 border-white flex items-center justify-center text-[10px] text-stone-500 shadow-sm">
                               +{game.spirits.length - 3}
@@ -493,7 +522,7 @@ const App: React.FC = () => {
                       <button
                         onClick={(e) => deleteHistoryItem(game.id, e)}
                         className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                        title="Eintrag löschen"
+                        title={t('common.delete')}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -503,12 +532,12 @@ const App: React.FC = () => {
               </div>
             ) : (
               <div className="py-12 border-2 border-dashed border-stone-200 rounded-2xl">
-                <p className="text-stone-400 italic">Noch keine Spiele aufgezeichnet.</p>
+                <p className="text-stone-400 italic">{t('history.empty')}</p>
                 <button
                   onClick={handleImportClick}
                   className="mt-4 text-teal-600 font-bold hover:text-teal-500 transition-colors"
                 >
-                  Jetzt Daten importieren
+                  {t('history.import_now')}
                 </button>
               </div>
             )}

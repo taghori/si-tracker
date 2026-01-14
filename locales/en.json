@@ -1,0 +1,192 @@
+{
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "back": "BACK",
+        "next_phase": "NEXT PHASE",
+        "next_round": "NEXT ROUND",
+        "start_game": "Start Game",
+        "victory": "Victory",
+        "defeat": "Defeat",
+        "points": "Points",
+        "round": "Round",
+        "round_short": "Rd",
+        "players": "Players",
+        "difficulty": "Difficulty",
+        "duration": "Duration",
+        "confirm_delete": "Delete entry?",
+        "confirm_reset": "Do you really want to cancel the game (without scoring) and return to the selection?"
+    },
+    "header": {
+        "title_main": "Spirit Island",
+        "title_sub": "Tracker",
+        "timer_pause": "Pause",
+        "timer_resume": "Resume",
+        "end_game": "End Game & Score",
+        "settings": "Settings",
+        "reset": "Abort / Reset",
+        "paused_overlay": "Game Paused",
+        "resume_button": "Resume Game"
+    },
+    "history": {
+        "title": "Past Games",
+        "export": "Export",
+        "import": "Import",
+        "empty": "No games recorded yet.",
+        "import_now": "Import data now",
+        "import_found": "{count} games found. Would you like to add these to your history?",
+        "import_success": "{count} new games imported.",
+        "import_error_format": "Invalid format. The file must contain an array of games."
+    },
+    "settings": {
+        "title": "Prepare Expedition",
+        "player_count": "Player Count",
+        "expansions": "Expansions",
+        "select_spirits": "Select Spirits",
+        "adversary": "Adversary",
+        "scenario": "Scenario",
+        "none": "None",
+        "level": "Level"
+    },
+    "scoring": {
+        "title": "Game Scoring",
+        "calculate": "Calculate Points",
+        "save_and_exit": "Save & Exit",
+        "victory_msg": "The Island is Saved!",
+        "defeat_msg": "The Invaders have Won",
+        "total_score": "Total Score",
+        "breakdown_base": "Base ({outcome}) x Diff {diff}",
+        "breakdown_invaders": "Invader Cards ({count} x {multiplier})",
+        "breakdown_dahan": "Surviving Dahan ({count} / {players})",
+        "breakdown_blight": "Blight ({count} / {players})",
+        "input_dahan": "Surviving Dahan",
+        "input_blight": "Blight",
+        "input_invader_cards_victory": "Cards in deck",
+        "input_invader_cards_defeat": "Cards face up + discard",
+        "points_per_dahan": "+1 point per {count} Dahan (current: +{points})",
+        "points_per_blight": "-1 point per {count} Blight (current: -{points})",
+        "points_per_card": "+{multiplier} points per card"
+    },
+    "phases": {
+        "spirit-growth": {
+            "name": "Spirit Phase",
+            "desc": "Growth, gain energy, and play power cards.",
+            "substeps": [
+                "Choose growth option",
+                "Gain energy",
+                "Play power cards (pay energy)"
+            ]
+        },
+        "fast-power": {
+            "name": "Fast Powers",
+            "desc": "Resolve Fast Powers (bird symbol) and innate powers.",
+            "substeps": [
+                "Spirits and Invaders act simultaneously here"
+            ]
+        },
+        "invader-blight": {
+            "name": "Blighted Island",
+            "desc": "Check Blighted Island card effect if the island is blighted."
+        },
+        "invader-event": {
+            "name": "Event",
+            "desc": "Draw and resolve an Event Card (B&C / Jagged Earth)."
+        },
+        "invader-fear": {
+            "name": "Fear",
+            "desc": "Flip and resolve earned Fear Cards."
+        },
+        "invader-ravage": {
+            "name": "Ravage",
+            "desc": "Invaders deal damage to the Land and Dahan."
+        },
+        "invader-build": {
+            "name": "Build",
+            "desc": "Invaders build towns or cities in lands with Invaders."
+        },
+        "invader-explore": {
+            "name": "Explore",
+            "desc": "Invaders explore new lands (reveal card)."
+        },
+        "invader-advance": {
+            "name": "Invader Cards",
+            "desc": "Advance all Invader Cards one space to the left."
+        },
+        "invader-cascading-ravage": {
+            "name": "Cascading Ravage",
+            "desc": "Resolve additional Ravage effects if applicable."
+        },
+        "slow-power": {
+            "name": "Slow Powers",
+            "desc": "Resolve Slow Powers (turtle symbol)."
+        },
+        "time-passes": {
+            "name": "Time Passes",
+            "desc": "Heal damage, discard cards, reset elements."
+        }
+    },
+    "spirits": {
+        "river": "River Surges in Sunlight",
+        "lightning": "Lightning's Swift Strike",
+        "shadows": "Shadows Flicker Like Flame",
+        "earth": "Vital Strength of the Earth",
+        "thunderspeaker": "Thunderspeaker",
+        "green": "A Spread of Rampant Green",
+        "ocean": "Ocean's Hungry Grasp",
+        "bringer": "Bringer of Dreams and Nightmares",
+        "keeper": "Keeper of the Forbidden Wilds",
+        "fangs": "Sharp Fangs Behind the Leaves",
+        "volcano": "Volcano Looming High",
+        "mist": "Shroud of Silent Mist",
+        "vengeance": "Vengeance as a Burning Plague",
+        "stone": "Stone's Unyielding Defiance",
+        "many-minds": "Many Minds Move as One",
+        "lure": "Lure of the Deep Wilderness",
+        "starlight": "Starlight Seeks Its Form",
+        "fractured": "Fractured Days Split the Sky",
+        "wildfire": "Heart of the Wildfire",
+        "serpent": "Serpent Slumbering Beneath the Island",
+        "downpour": "Downpour Drenches the World",
+        "finder": "Finder of Paths Unseen",
+        "eyes": "Eyes Watch from the Trees",
+        "mud": "Fathomless Mud of the Swamp",
+        "heat": "Rising Heat of Stone and Sand",
+        "whirlwind": "Sun-Bright Whirlwind",
+        "teeth": "Devouring Teeth Lurk Underfoot"
+    },
+    "adversaries": {
+        "prussia": "Kingdom of Brandenburg-Prussia",
+        "england": "Kingdom of England",
+        "sweden": "Kingdom of Sweden",
+        "france": "Kingdom of France (Plantation)",
+        "habsburg": "Habsburg Monarchy (Livestock Colonies)",
+        "russia": "Tsardom of Russia",
+        "scotland": "Kingdom of Scotland"
+    },
+    "scenarios": {
+        "blitz": "Blitz",
+        "dahan-insurrection": "Dahan Insurrection",
+        "guard-heart": "Guard the Isle's Heart",
+        "rituals-terror": "Rituals of Terror",
+        "ward-shores": "Ward the Shores",
+        "powers-forgotten": "Powers Long Forgotten",
+        "elemental-invocation": "Elemental Invocation",
+        "desperation": "Desperation"
+    },
+    "expansions": {
+        "base": "Base Game",
+        "branch_and_claw": "Branch & Claw",
+        "jagged_earth": "Jagged Earth",
+        "horizons": "Horizons",
+        "nature_incarnate": "Nature Incarnate",
+        "feather_and_flame": "Feather & Flame"
+    },
+    "details": {
+        "victory_title": "Glorious Victory",
+        "defeat_title": "Bitter Defeat",
+        "spirits_title": "Participating Spirits",
+        "expansions_title": "Active Expansions"
+    }
+}

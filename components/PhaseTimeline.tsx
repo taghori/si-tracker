@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Phase } from '../types';
 import { getIcon } from '../constants';
+import { useI18n } from '../services/i18n';
 
 interface PhaseTimelineProps {
   phases: Phase[];
@@ -9,6 +10,7 @@ interface PhaseTimelineProps {
 }
 
 const PhaseTimeline: React.FC<PhaseTimelineProps> = ({ phases, currentIndex, onSelect }) => {
+  const { t } = useI18n();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,6 +32,7 @@ const PhaseTimeline: React.FC<PhaseTimelineProps> = ({ phases, currentIndex, onS
         {phases.map((phase, idx) => {
           const isActive = idx === currentIndex;
           const isPast = idx < currentIndex;
+          const phaseName = t(`phases.${phase.id}.name`) || phase.name;
 
           return (
             <button
@@ -50,7 +53,7 @@ const PhaseTimeline: React.FC<PhaseTimelineProps> = ({ phases, currentIndex, onS
                 </div>
               </div>
               <span className={`text-[10px] md:text-xs font-bold uppercase tracking-wide truncate max-w-full ${isActive ? 'text-stone-800' : 'text-stone-400'}`}>
-                {phase.name}
+                {phaseName}
               </span>
 
               {isActive && (

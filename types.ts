@@ -1,17 +1,17 @@
 
 export enum PhaseCategory {
-  SPIRIT = 'Geister-Phase',
-  FAST = 'Schnelle Kräfte',
-  INVADER = 'Invasoren-Phase',
-  SLOW = 'Langsame Kräfte',
-  TIME = 'Zeit verstreicht'
+  SPIRIT = 'SPIRIT',
+  FAST = 'FAST',
+  INVADER = 'INVADER',
+  SLOW = 'SLOW',
+  TIME = 'TIME'
 }
 
 export interface Phase {
   id: string;
-  name: string;
+  name?: string;
   category: PhaseCategory;
-  description: string;
+  description?: string;
   substeps?: string[];
   color: string;
   iconName: string;
@@ -36,20 +36,20 @@ export enum ExpansionId {
 
 export interface Spirit {
   id: string;
-  name: string;
+  name?: string;
   expansionId: ExpansionId;
 }
 
 export interface Adversary {
   id: string;
-  name: string;
+  name?: string;
   levels: { level: number; difficulty: number }[];
   expansionId: ExpansionId;
 }
 
 export interface Scenario {
   id: string;
-  name: string;
+  name?: string;
   difficulty: number;
   expansionId: ExpansionId;
 }
@@ -77,7 +77,9 @@ export interface GameResult {
   adversary?: {
     name: string;
     level: number;
+    id?: string;
   };
   scenario?: string;
+  scenarioId?: string;
   expansions: ExpansionId[];
 }

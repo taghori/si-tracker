@@ -21,53 +21,52 @@ import {
 import React from 'react';
 
 export const EXPANSIONS = [
-  { id: ExpansionId.BASE, name: 'Basisspiel' },
-  { id: ExpansionId.BRANCH_AND_CLAW, name: 'Ast und Tatze' },
-  { id: ExpansionId.JAGGED_EARTH, name: 'Zerklüftete Erde' },
-  { id: ExpansionId.HORIZONS, name: 'Horizonte' },
-  { id: ExpansionId.NATURE_INCARNATE, name: 'Nature Incarnate' },
-  { id: ExpansionId.FEATHER_AND_FLAME, name: 'Feder und Flamme' },
+  { id: ExpansionId.BASE },
+  { id: ExpansionId.BRANCH_AND_CLAW },
+  { id: ExpansionId.JAGGED_EARTH },
+  { id: ExpansionId.HORIZONS },
+  { id: ExpansionId.NATURE_INCARNATE },
+  { id: ExpansionId.FEATHER_AND_FLAME },
 ];
 
 export const SPIRITS: Spirit[] = [
   // Base
-  { id: 'river', name: 'Sonnengenährter Fluss', expansionId: ExpansionId.BASE },
-  { id: 'lightning', name: 'Pfeilschneller Blitzschlag', expansionId: ExpansionId.BASE },
-  { id: 'shadows', name: 'Flackernde Schatten', expansionId: ExpansionId.BASE },
-  { id: 'earth', name: 'Lebenskraft der Erde', expansionId: ExpansionId.BASE },
-  { id: 'thunderspeaker', name: 'Donnerrufer', expansionId: ExpansionId.BASE },
-  { id: 'green', name: 'Wucherndes Grün', expansionId: ExpansionId.BASE },
-  { id: 'ocean', name: 'Hunger des Ozeans', expansionId: ExpansionId.BASE },
-  { id: 'bringer', name: 'Bote der Alpträume', expansionId: ExpansionId.BASE },
+  { id: 'river', expansionId: ExpansionId.BASE },
+  { id: 'lightning', expansionId: ExpansionId.BASE },
+  { id: 'shadows', expansionId: ExpansionId.BASE },
+  { id: 'earth', expansionId: ExpansionId.BASE },
+  { id: 'thunderspeaker', expansionId: ExpansionId.BASE },
+  { id: 'green', expansionId: ExpansionId.BASE },
+  { id: 'ocean', expansionId: ExpansionId.BASE },
+  { id: 'bringer', expansionId: ExpansionId.BASE },
   // B&C
-  { id: 'keeper', name: 'Hüter der verbotenen Wildnis', expansionId: ExpansionId.BRANCH_AND_CLAW },
-  { id: 'fangs', name: 'Scharfe Zähne hinter den Blättern', expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'keeper', expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'fangs', expansionId: ExpansionId.BRANCH_AND_CLAW },
   // Jagged Earth
-  { id: 'volcano', name: 'Vulkan, der sich hoch auftürmt', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'mist', name: 'Nebel aus Nichts', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'vengeance', name: 'Rache als brennende Plage', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'stone', name: 'Unnachgiebig wie Stein', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'many-minds', name: 'Viele Geister bewegen sich als Einer', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'lure', name: 'Lockruf der tiefsten Wildnis', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'starlight', name: 'Sternenlicht sucht seine Gestalt', expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'fractured', name: 'Zersplitterte Tage spalten den Himmel', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'volcano', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'mist', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'vengeance', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'stone', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'many-minds', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'lure', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'starlight', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'fractured', expansionId: ExpansionId.JAGGED_EARTH },
   // Feather and Flame
-  { id: 'wildfire', name: 'Herz des Lauffeuers', expansionId: ExpansionId.FEATHER_AND_FLAME },
-  { id: 'serpent', name: 'Schlummernde Schlange unter der Insel', expansionId: ExpansionId.FEATHER_AND_FLAME },
-  { id: 'downpour', name: 'Regenguss durchnässt die Welt', expansionId: ExpansionId.FEATHER_AND_FLAME },
-  { id: 'finder', name: 'Finder unsichtbarer Pfade', expansionId: ExpansionId.FEATHER_AND_FLAME },
-  // Horizons (German translations approximated where official not strictly defined in context, but standardizing)
-  { id: 'eyes', name: 'Wachsame Augen in den Bäumen', expansionId: ExpansionId.HORIZONS },
-  { id: 'mud', name: 'Sumpf, der alles verschlingt', expansionId: ExpansionId.HORIZONS },
-  { id: 'heat', name: 'Aufsteigende Hitze aus Stein und Sand', expansionId: ExpansionId.HORIZONS },
-  { id: 'whirlwind', name: 'Spielender Sonnen-Wirbelwind', expansionId: ExpansionId.HORIZONS },
-  { id: 'teeth', name: 'Zähne, die im Verborgenen lauern', expansionId: ExpansionId.HORIZONS },
+  { id: 'wildfire', expansionId: ExpansionId.FEATHER_AND_FLAME },
+  { id: 'serpent', expansionId: ExpansionId.FEATHER_AND_FLAME },
+  { id: 'downpour', expansionId: ExpansionId.FEATHER_AND_FLAME },
+  { id: 'finder', expansionId: ExpansionId.FEATHER_AND_FLAME },
+  // Horizons
+  { id: 'eyes', expansionId: ExpansionId.HORIZONS },
+  { id: 'mud', expansionId: ExpansionId.HORIZONS },
+  { id: 'heat', expansionId: ExpansionId.HORIZONS },
+  { id: 'whirlwind', expansionId: ExpansionId.HORIZONS },
+  { id: 'teeth', expansionId: ExpansionId.HORIZONS },
 ];
 
 export const ADVERSARIES: Adversary[] = [
   {
     id: 'prussia',
-    name: 'Königreich Brandenburg-Preußen',
     expansionId: ExpansionId.BASE,
     levels: [
       { level: 0, difficulty: 1 },
@@ -81,7 +80,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'england',
-    name: 'Königreich England',
     expansionId: ExpansionId.BASE,
     levels: [
       { level: 0, difficulty: 1 },
@@ -95,7 +93,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'sweden',
-    name: 'Königreich Schweden',
     expansionId: ExpansionId.BASE,
     levels: [
       { level: 0, difficulty: 1 },
@@ -109,7 +106,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'france',
-    name: 'Königreich Frankreich (Plantage)',
     expansionId: ExpansionId.BRANCH_AND_CLAW,
     levels: [
       { level: 0, difficulty: 2 },
@@ -123,7 +119,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'habsburg',
-    name: 'Habsburger Monarchie (Viehzucht)',
     expansionId: ExpansionId.JAGGED_EARTH,
     levels: [
       { level: 0, difficulty: 2 },
@@ -137,7 +132,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'russia',
-    name: 'Zarentum Russland',
     expansionId: ExpansionId.JAGGED_EARTH,
     levels: [
       { level: 0, difficulty: 1 },
@@ -151,7 +145,6 @@ export const ADVERSARIES: Adversary[] = [
   },
   {
     id: 'scotland',
-    name: 'Königreich Schottland',
     expansionId: ExpansionId.FEATHER_AND_FLAME,
     levels: [
       { level: 0, difficulty: 1 },
@@ -166,105 +159,83 @@ export const ADVERSARIES: Adversary[] = [
 ];
 
 export const SCENARIOS: Scenario[] = [
-  { id: 'blitz', name: 'Blitz', difficulty: 0, expansionId: ExpansionId.BASE },
-  { id: 'dahan-insurrection', name: 'Aufstand der Dahan', difficulty: 4, expansionId: ExpansionId.BASE },
-  { id: 'guard-heart', name: 'Wacht über das Herz der Insel', difficulty: 0, expansionId: ExpansionId.BASE },
-  { id: 'rituals-terror', name: 'Rituale des Terrors', difficulty: 3, expansionId: ExpansionId.BASE },
-  { id: 'ward-shores', name: 'Schutz der Küsten', difficulty: 2, expansionId: ExpansionId.BRANCH_AND_CLAW },
-  { id: 'powers-forgotten', name: 'Längst vergessene Mächte', difficulty: 1, expansionId: ExpansionId.BRANCH_AND_CLAW },
-  { id: 'elemental-invocation', name: 'Beschwörung der Elemente', difficulty: 0, expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'desperation', name: 'Verzweiflung', difficulty: 1, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'blitz', difficulty: 0, expansionId: ExpansionId.BASE },
+  { id: 'dahan-insurrection', difficulty: 4, expansionId: ExpansionId.BASE },
+  { id: 'guard-heart', difficulty: 0, expansionId: ExpansionId.BASE },
+  { id: 'rituals-terror', difficulty: 3, expansionId: ExpansionId.BASE },
+  { id: 'ward-shores', difficulty: 2, expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'powers-forgotten', difficulty: 1, expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'elemental-invocation', difficulty: 0, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'desperation', difficulty: 1, expansionId: ExpansionId.JAGGED_EARTH },
 ];
 
 export const GAME_PHASES: Phase[] = [
   {
     id: 'spirit-growth',
-    name: 'Geister-Phase',
     category: PhaseCategory.SPIRIT,
-    description: 'Wachsen, Energie erhalten und Fähigkeitenkarten spielen.',
-    substeps: ['Wachstumsoption wählen', 'Energie erhalten', 'Karten spielen (Energie bezahlen)'],
+    substeps: ['spirit-growth-step1', 'spirit-growth-step2', 'spirit-growth-step3'],
     color: 'text-emerald-600',
     iconName: 'Sprout'
   },
   {
     id: 'fast-power',
-    name: 'Schnelle Kräfte',
     category: PhaseCategory.FAST,
-    description: 'Schnelle Fähigkeiten (Vogel-Symbol) und angeborene Fähigkeiten abhandeln.',
-    substeps: ['Geister und Invasoren agieren hier gleichzeitig'],
+    substeps: ['fast-power-step1'],
     color: 'text-amber-600',
     iconName: 'Zap'
   },
   {
     id: 'invader-blight',
-    name: 'Verödete Insel',
     category: PhaseCategory.INVADER,
-    description: 'Prüfe den Effekt der Karte "Verödete Insel", falls die Insel verödet ist.',
     color: 'text-stone-500',
     iconName: 'Skull'
   },
   {
     id: 'invader-event',
-    name: 'Ereignis',
     category: PhaseCategory.INVADER,
-    description: 'Ziehe und handle eine Ereigniskarte ab (Ast & Tatze / Zerklüftete Erde).',
     requiresEvents: true,
     color: 'text-purple-600',
     iconName: 'Ghost'
   },
   {
     id: 'invader-fear',
-    name: 'Furcht',
     category: PhaseCategory.INVADER,
-    description: 'Verdiente Furchtkarten umdrehen und abhandeln.',
     color: 'text-indigo-600',
     iconName: 'ShieldAlert'
   },
   {
     id: 'invader-ravage',
-    name: 'Wüten',
     category: PhaseCategory.INVADER,
-    description: 'Invasoren fügen dem Land und den Dahan Schaden zu.',
     color: 'text-red-600',
     iconName: 'Flame'
   },
   {
     id: 'invader-build',
-    name: 'Bauen',
     category: PhaseCategory.INVADER,
-    description: 'Invasoren bauen Dörfer oder Städte in Gebieten mit Invasoren.',
     color: 'text-orange-600',
     iconName: 'Construction'
   },
   {
     id: 'invader-explore',
-    name: 'Entdecken',
     category: PhaseCategory.INVADER,
-    description: 'Invasoren erkunden neue Gebiete (Karte aufdecken).',
     color: 'text-blue-600',
-    iconName: 'Flag' // Using Flag for Explore/Expedition vibe
+    iconName: 'Flag'
   },
   {
     id: 'invader-advance',
-    name: 'Invasorenkarten',
     category: PhaseCategory.INVADER,
-    description: 'Schiebe alle Invasorenkarten einen Platz nach links.',
     color: 'text-stone-500',
     iconName: 'ArrowRightCircle'
   },
   {
     id: 'slow-power',
-    name: 'Langsame Kräfte',
     category: PhaseCategory.SLOW,
-    description: 'Langsame Fähigkeiten (Schildkröten-Symbol) abhandeln.',
     color: 'text-blue-800',
     iconName: 'Hourglass'
   },
   {
     id: 'time-passes',
-    name: 'Zeit verstreicht',
     category: PhaseCategory.TIME,
-    description: 'Schaden heilen, Karten ablegen, Elemente zurücksetzen.',
     color: 'text-teal-600',
     iconName: 'Sun'
   }

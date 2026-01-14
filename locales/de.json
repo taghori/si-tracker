@@ -1,0 +1,192 @@
+{
+    "common": {
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "delete": "Löschen",
+        "back": "ZURÜCK",
+        "next_phase": "NÄCHSTE PHASE",
+        "next_round": "NÄCHSTE RUNDE",
+        "start_game": "Spiel Starten",
+        "victory": "Sieg",
+        "defeat": "Niederlage",
+        "points": "Punkte",
+        "round": "Runde",
+        "round_short": "Rd",
+        "players": "Spieler",
+        "difficulty": "Schwierigkeit",
+        "duration": "Dauer",
+        "confirm_delete": "Eintrag löschen?",
+        "confirm_reset": "Möchtest du das Spiel wirklich abbrechen (ohne Wertung) und zur Auswahl zurückkehren?"
+    },
+    "header": {
+        "title_main": "Spirit Island",
+        "title_sub": "Tracker",
+        "timer_pause": "Pause",
+        "timer_resume": "Fortsetzen",
+        "end_game": "Spiel beenden & Werten",
+        "settings": "Einstellungen",
+        "reset": "Abbrechen / Reset",
+        "paused_overlay": "Zeit angehalten",
+        "resume_button": "Spiel fortsetzen"
+    },
+    "history": {
+        "title": "Vergangene Spiele",
+        "export": "Export",
+        "import": "Import",
+        "empty": "Noch keine Spiele aufgezeichnet.",
+        "import_now": "Jetzt Daten importieren",
+        "import_found": "{count} Spiele gefunden. Möchtest du diese zu deinem Verlauf hinzufügen?",
+        "import_success": "{count} neue Spiele wurden importiert.",
+        "import_error_format": "Ungültiges Format. Die Datei muss ein Array von Spielen enthalten."
+    },
+    "settings": {
+        "title": "Expedition vorbereiten",
+        "player_count": "Anzahl Spieler",
+        "expansions": "Erweiterungen",
+        "select_spirits": "Geister wählen",
+        "adversary": "Widersacher",
+        "scenario": "Szenario",
+        "none": "Keiner",
+        "level": "Stufe"
+    },
+    "scoring": {
+        "title": "Spielwertung",
+        "calculate": "Punkte berechnen",
+        "save_and_exit": "Speichern & Beenden",
+        "victory_msg": "Die Insel ist gerettet!",
+        "defeat_msg": "Die Invasoren haben gesiegt",
+        "total_score": "Gesamtpunktzahl",
+        "breakdown_base": "Basis ({outcome}) x Schw.{diff}",
+        "breakdown_invaders": "Invasorenkarten ({count} x {multiplier})",
+        "breakdown_dahan": "Überlebende Dahan ({count} / {players})",
+        "breakdown_blight": "Verödung ({count} / {players})",
+        "input_dahan": "Überlebende Dahan",
+        "input_blight": "Verödung",
+        "input_invader_cards_victory": "Karten im Nachziehstapel",
+        "input_invader_cards_defeat": "Karten offen + Ablage",
+        "points_per_dahan": "+1 Punkt pro {count} Dahan (aktuell: +{points})",
+        "points_per_blight": "-1 Punkt pro {count} Verödung (aktuell: -{points})",
+        "points_per_card": "+{multiplier} Punkte pro Karte"
+    },
+    "phases": {
+        "spirit-growth": {
+            "name": "Geister-Phase",
+            "desc": "Wachsen, Energie erhalten und Fähigkeitenkarten spielen.",
+            "substeps": [
+                "Wachstumsoption wählen",
+                "Energie erhalten",
+                "Karten spielen (Energie bezahlen)"
+            ]
+        },
+        "fast-power": {
+            "name": "Schnelle Kräfte",
+            "desc": "Schnelle Fähigkeiten (Vogel-Symbol) und angeborene Fähigkeiten abhandeln.",
+            "substeps": [
+                "Geister und Invasoren agieren hier gleichzeitig"
+            ]
+        },
+        "invader-blight": {
+            "name": "Verödete Insel",
+            "desc": "Prüfe den Effekt der Karte \"Verödete Insel\", falls die Insel verödet ist."
+        },
+        "invader-event": {
+            "name": "Ereignis",
+            "desc": "Ziehe und handle eine Ereigniskarte ab (Ast & Tatze / Zerklüftete Erde)."
+        },
+        "invader-fear": {
+            "name": "Furcht",
+            "desc": "Verdiente Furchtkarten umdrehen und abhandeln."
+        },
+        "invader-ravage": {
+            "name": "Wüten",
+            "desc": "Invasoren fügen dem Land und den Dahan Schaden zu."
+        },
+        "invader-build": {
+            "name": "Bauen",
+            "desc": "Invasoren bauen Dörfer oder Städte in Gebieten mit Invasoren."
+        },
+        "invader-explore": {
+            "name": "Entdecken",
+            "desc": "Invasoren erkunden neue Gebiete (Karte aufdecken)."
+        },
+        "invader-advance": {
+            "name": "Invasorenkarten",
+            "desc": "Schiebe alle Invasorenkarten einen Platz nach links."
+        },
+        "invader-cascading-ravage": {
+            "name": "Kaskadierendes Wüten",
+            "desc": "Zusätzliche Wüten-Effekte abhandeln, falls zutreffend."
+        },
+        "slow-power": {
+            "name": "Langsame Kräfte",
+            "desc": "Langsame Fähigkeiten (Schildkröten-Symbol) abhandeln."
+        },
+        "time-passes": {
+            "name": "Zeit verstreicht",
+            "desc": "Schaden heilen, Karten ablegen, Elemente zurücksetzen."
+        }
+    },
+    "spirits": {
+        "river": "Sonnengenährter Fluss",
+        "lightning": "Pfeilschneller Blitzschlag",
+        "shadows": "Flackernde Schatten",
+        "earth": "Lebenskraft der Erde",
+        "thunderspeaker": "Stimme des Donners",
+        "green": "Wild wucherndes Grün",
+        "ocean": "Hunger des Ozeans",
+        "bringer": "Bote der Albträume",
+        "keeper": "Hüter der verbotenen Wildnis",
+        "fangs": "Scharfe Reißzähne hinter Blättern",
+        "volcano": "Hoch aufragender Vulkan",
+        "mist": "Schleier des stillen Nebels",
+        "vengeance": "Rache als brennende Plage",
+        "stone": "Steins unbeugsame Haltung",
+        "many-minds": "Viele Geister wirken als Einer",
+        "lure": "Lockruf der tiefen Wildnis",
+        "starlight": "Sternenlicht sucht seine Gestalt",
+        "fractured": "Gebrochene Tage zerteilen den Himmel",
+        "wildfire": "Seele des Flächenbrands",
+        "serpent": "Unter der Insel schlummernde Schlange",
+        "downpour": "Sturzregen durchnässt die Welt",
+        "finder": "Finder unsichtbarer Wege",
+        "eyes": "Wachende Augen in Bäumen",
+        "mud": "Bodenloser Schlamm der Sümpfe",
+        "heat": "Zunehmende Hitze in Stein und Sand",
+        "whirlwind": "Sonnenheller Wirbelwind",
+        "teeth": "Unterirdisch lauernde Reißzähne"
+    },
+    "adversaries": {
+        "prussia": "Königreich Brandenburg-Preußen",
+        "england": "Königreich England",
+        "sweden": "Königreich Schweden",
+        "france": "Königreich Frankreich (Plantagenkolonie)",
+        "habsburg": "Habsburger-Monarchie (Viehzüchterkolonie)",
+        "russia": "Zarentum Russland",
+        "scotland": "Königreich Schottland"
+    },
+    "scenarios": {
+        "blitz": "Blitz",
+        "dahan-insurrection": "Dahan-Aufstand",
+        "guard-heart": "Wache das Herz der Insel",
+        "rituals-terror": "Rituale des Schreckens",
+        "ward-shores": "Die Küsten bewachen",
+        "powers-forgotten": "Lange vergessene Kräfte",
+        "elemental-invocation": "Elementare Anrufung",
+        "desperation": "Verzweiflung"
+    },
+    "expansions": {
+        "base": "Grundspiel",
+        "branch_and_claw": "Ast und Tatze",
+        "jagged_earth": "Zerklüftete Erde",
+        "horizons": "Horizonte",
+        "nature_incarnate": "Natur Erwacht",
+        "feather_and_flame": "Feder und Flamme"
+    },
+    "details": {
+        "victory_title": "Glorreicher Sieg",
+        "defeat_title": "Bittere Niederlage",
+        "spirits_title": "Teilnehmende Geister",
+        "expansions_title": "Aktive Erweiterungen"
+    }
+}

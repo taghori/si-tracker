@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Trophy, Skull, Calculator, Clock, Save, Flame, TreeDeciduous } from 'lucide-react';
+import { X, Trophy, Skull, Calculator, Clock, Save, Flame, TreeDeciduous, Play } from 'lucide-react';
 import { GameResult, Spirit, GameSettings } from '../types';
 import { ADVERSARIES, SCENARIOS } from '../constants';
+import { useI18n } from '../services/i18n';
 
 interface ScoringDialogProps {
   playerCount: number;
@@ -15,6 +16,7 @@ interface ScoringDialogProps {
 type GameOutcome = 'victory' | 'defeat';
 
 const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame }) => {
+  const { t } = useI18n();
   const [step, setStep] = useState<'input' | 'result'>('input');
 
   // Calculate initial difficulty from settings
@@ -89,8 +91,9 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
       spirits,
       duration: elapsedTime,
       expansions: settings.expansions,
-      adversary: adv ? { name: adv.name, level: settings.adversary!.level } : undefined,
-      scenario: sce?.name
+      adversary: adv ? { name: t(`adversaries.${adv.id}`), level: settings.adversary!.level, id: adv.id } : undefined,
+      scenario: sce ? t(`scenarios.${sce.id}`) : undefined,
+      scenarioId: sce?.id
     };
     onSaveGame(result);
   };
@@ -116,15 +119,15 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
             )}
 
             <h2 className={`text-3xl font-serif font-bold mb-2 ${outcome === 'victory' ? 'text-amber-700' : 'text-stone-700'}`}>
-              {outcome === 'victory' ? "Die Insel ist gerettet!" : "Die Invasoren haben gesiegt"}
+              {outcome === 'victory' ? t('scoring.victory_msg') : t('scoring.defeat_msg')}
             </h2>
             <div className="flex items-center gap-2 text-stone-500 mb-8 font-mono text-sm font-bold uppercase tracking-wider">
               <Clock className="w-4 h-4" />
-              <span>Spieldauer: {elapsedTime}</span>
+              <span>{t('common.duration')}: {elapsedTime}</span>
             </div>
 
             <div className="w-full bg-white/70 rounded-xl p-6 mb-8 border border-stone-200 shadow-sm">
-              <span className="block text-stone-400 text-xs font-bold uppercase tracking-widest mb-2">Gesamtpunktzahl</span>
+              <span className="block text-stone-400 text-xs font-bold uppercase tracking-widest mb-2">{t('scoring.total_score')}</span>
               <span className={`text-7xl font-serif font-bold ${outcome === 'victory' ? 'text-amber-600' : 'text-stone-600'}`}>
                 {details.totalScore}
               </span>
@@ -133,25 +136,22 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
             {/* Breakdown */}
             <div className="w-full text-sm space-y-3 text-stone-600 mb-8 border-t border-stone-200 pt-6">
               <div className="flex justify-between font-medium">
-                <span>Basis ({outcome === 'victory' ? 'Sieg + 10' : 'Niederlage'}) x Schw.{difficulty}</span>
+                <span>{t('scoring.breakdown_base', { outcome: t(`common.${outcome}`), diff: difficulty })}</span>
                 <span className="font-bold">{details.baseScore}</span>
               </div>
 
               <div className="flex justify-between text-indigo-700/80">
-                <span>
-                  {outcome === 'victory' ? 'Karten im Stapel' : 'Gespielte Karten'}
-                  ({invaderCards} x {outcome === 'victory' ? '2' : '1'})
-                </span>
+                <span>{t('scoring.breakdown_invaders', { count: invaderCards, multiplier: outcome === 'victory' ? 2 : 1 })}</span>
                 <span className="font-bold">+{details.invaderScore}</span>
               </div>
 
               <div className="flex justify-between text-emerald-700/80">
-                <span>Lebende Dahan ({dahan} / {playerCount})</span>
+                <span>{t('scoring.breakdown_dahan', { count: dahan, players: playerCount })}</span>
                 <span className="font-bold">+{details.dahanPoints}</span>
               </div>
 
               <div className="flex justify-between text-red-600/80">
-                <span>Verödung ({blight} / {playerCount})</span>
+                <span>{t('scoring.breakdown_blight', { count: blight, players: playerCount })}</span>
                 <span className="font-bold">-{details.blightPenalty}</span>
               </div>
             </div>
@@ -163,7 +163,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
               `}
             >
               <Save className="w-5 h-5" />
-              Speichern & Beenden
+              {t('scoring.save_and_exit')}
             </button>
           </div>
         </div>
@@ -174,7 +174,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
   // Input Step
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-md p-4 animate-fade-in">
-      <div className="bg-parchment-100 border border-stone-300 rounded-2xl w-full max-w-md flex flex-col shadow-2xl relative overflow-hidden">
+      <div className="bg-parchment-100 border border-stone-300 rounded-2xl w-full max-md flex flex-col shadow-2xl relative overflow-hidden">
 
         {/* Paper Texture Overlay */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-40 mix-blend-multiply pointer-events-none" />
@@ -182,7 +182,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
         <div className="relative z-10 flex items-center justify-between p-6 border-b border-stone-300 bg-parchment-200/50">
           <div className="flex items-center gap-2">
             <Calculator className="w-6 h-6 text-stone-600" />
-            <h2 className="text-xl font-serif font-bold text-stone-800">Spielwertung</h2>
+            <h2 className="text-xl font-serif font-bold text-stone-800">{t('scoring.title')}</h2>
           </div>
           <button onClick={onClose} className="text-stone-400 hover:text-stone-700">
             <X className="w-6 h-6" />
@@ -201,7 +201,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
                 }`}
             >
               <Trophy className="w-8 h-8" />
-              <span className="font-bold">Sieg</span>
+              <span className="font-bold">{t('common.victory')}</span>
             </button>
             <button
               onClick={() => setOutcome('defeat')}
@@ -211,14 +211,14 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
                 }`}
             >
               <Skull className="w-8 h-8" />
-              <span className="font-bold">Niederlage</span>
+              <span className="font-bold">{t('common.defeat')}</span>
             </button>
           </div>
 
           {/* Difficulty */}
           <div className="bg-white/50 p-4 rounded-xl border border-stone-200 space-y-3">
             <div className="flex justify-between items-end">
-              <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">Schwierigkeit</label>
+              <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">{t('common.difficulty')}</label>
               <span className="text-amber-600 font-serif font-bold text-2xl">{difficulty}</span>
             </div>
             <input
@@ -236,7 +236,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
                 <TreeDeciduous className="w-4 h-4 text-emerald-600" />
-                <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">Überlebende Dahan</label>
+                <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">{t('scoring.input_dahan')}</label>
               </div>
               <span className="text-emerald-600 font-serif font-bold text-2xl">{dahan}</span>
             </div>
@@ -257,7 +257,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
               >+</button>
             </div>
             <p className="text-xs text-emerald-700/70 font-medium text-center bg-emerald-50 py-1 px-2 rounded">
-              +1 Punkt pro {playerCount} Dahan (aktuell: +{Math.floor(dahan / playerCount)})
+              {t('scoring.points_per_dahan', { count: playerCount, points: Math.floor(dahan / playerCount) })}
             </p>
           </div>
 
@@ -266,7 +266,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
             <div className="flex justify-between items-end">
               <div className="flex items-center gap-2">
                 <Flame className="w-4 h-4 text-red-500" />
-                <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">Verödung</label>
+                <label className="text-stone-500 uppercase tracking-wider font-bold text-xs">{t('scoring.input_blight')}</label>
               </div>
               <span className="text-red-500 font-serif font-bold text-2xl">{blight}</span>
             </div>
@@ -287,7 +287,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
               >+</button>
             </div>
             <p className="text-xs text-red-600/70 font-medium text-center bg-red-50 py-1 px-2 rounded">
-              -1 Punkt pro {playerCount} Verödung (aktuell: -{Math.floor(blight / playerCount)})
+              {t('scoring.points_per_blight', { count: playerCount, points: Math.floor(blight / playerCount) })}
             </p>
           </div>
 
@@ -295,7 +295,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
           <div className="bg-white/50 p-4 rounded-xl border border-stone-200 space-y-3 animate-fade-in">
             <div className="flex justify-between items-end">
               <label className="text-stone-500 uppercase tracking-wider font-bold text-xs max-w-[70%]">
-                {outcome === 'victory' ? 'Karten im Nachziehstapel' : 'Karten offen + Ablage'}
+                {outcome === 'victory' ? t('scoring.input_invader_cards_victory') : t('scoring.input_invader_cards_defeat')}
               </label>
               <span className="text-indigo-500 font-serif font-bold text-2xl">{invaderCards}</span>
             </div>
@@ -316,7 +316,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
               >+</button>
             </div>
             <p className="text-xs text-indigo-600/70 font-medium text-center bg-indigo-50 py-1 px-2 rounded">
-              {outcome === 'victory' ? '+2 Punkte pro Karte' : '+1 Punkt pro Karte'}
+              {t('scoring.points_per_card', { multiplier: outcome === 'victory' ? 2 : 1 })}
             </p>
           </div>
 
@@ -328,7 +328,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
             className="w-full py-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-teal-900/20 transition-all"
           >
             <Calculator className="w-5 h-5" />
-            Punkte berechnen
+            {t('scoring.calculate')}
           </button>
         </div>
 
