@@ -25,6 +25,7 @@
         "timer_pause": "Pause",
         "timer_resume": "Fortsetzen",
         "end_game": "Spiel beenden & Werten",
+        "end_game_short": "Sieg / Wertung",
         "settings": "Einstellungen",
         "reset": "Abbrechen / Reset",
         "paused_overlay": "Zeit angehalten",

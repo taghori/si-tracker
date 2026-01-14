@@ -25,6 +25,7 @@
         "timer_pause": "Pause",
         "timer_resume": "Resume",
         "end_game": "End Game & Score",
+        "end_game_short": "Victory / Score",
         "settings": "Settings",
         "reset": "Abort / Reset",
         "paused_overlay": "Game Paused",

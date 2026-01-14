@@ -278,10 +278,13 @@ const App: React.FC = () => {
               {hasStarted && (
                 <button
                   onClick={() => setShowScoring(true)}
-                  className="p-1.5 md:p-2 text-stone-600 hover:text-emerald-600 hover:bg-emerald-50 transition-colors rounded-lg"
+                  className="ml-2 pr-4 pl-3 py-1.5 md:py-2 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200 transition-all active:scale-95 flex items-center gap-2 shadow-sm"
                   title={t('header.end_game')}
                 >
-                  <Flag className="w-5 h-5" />
+                  <Trophy className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
+                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest leading-none hidden xs:inline">
+                    {t('header.end_game_short')}
+                  </span>
                 </button>
               )}
               {hasStarted && (
@@ -365,12 +368,21 @@ const App: React.FC = () => {
 
             <button
               onClick={handleNext}
-              className="group flex-1 max-w-[280px] flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-gradient-to-r from-teal-600 to-teal-500 text-white shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 md:hover:scale-105 transition-all active:scale-95"
+              className="group flex-1 max-w-[280px] flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-gradient-to-r from-teal-600 to-teal-500 text-white shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 md:hover:scale-105 transition-all active:scale-95 border-b-2 border-teal-700"
             >
               <span className="font-bold tracking-wider md:tracking-widest text-base md:text-lg whitespace-nowrap">
                 {phaseIndex === activePhases.length - 1 ? t('common.next_round') : t('common.next_phase')}
               </span>
               <ChevronRight className="w-5 h-5 md:w-6 md:h-6 md:group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* Victory Button in Bottom Bar (Mobile focused) */}
+            <button
+              onClick={() => setShowScoring(true)}
+              className="flex items-center justify-center p-3 md:p-4 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-900/20 hover:bg-amber-400 transition-all active:scale-90 border-b-2 border-amber-700 sm:hover:scale-110"
+              title={t('header.end_game')}
+            >
+              <Trophy className="w-6 h-6 md:w-7 md:h-7 fill-white/20" />
             </button>
           </div>
 
