@@ -36,9 +36,20 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
       if (exists) {
         return { ...prev, selectedSpirits: prev.selectedSpirits.filter(s => s.id !== spirit.id) };
       } else {
-        return { ...prev, selectedSpirits: [...prev.selectedSpirits, spirit] };
+        if (prev.selectedSpirits.length < prev.playerCount) {
+          return { ...prev, selectedSpirits: [...prev.selectedSpirits, spirit] };
+        }
+        return prev;
       }
     });
+  };
+
+  const setPlayerCount = (num: number) => {
+    setLocalSettings(prev => ({
+      ...prev,
+      playerCount: num,
+      selectedSpirits: prev.selectedSpirits.slice(0, num)
+    }));
   };
 
   const availableSpirits = SPIRITS.filter(s =>
@@ -75,15 +86,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           {/* Player Count */}
           <section>
             <h3 className="text-stone-500 font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-              <span className="w-full h-px bg-stone-300"></span>
-              {t('settings.player_count')}
-              <span className="w-full h-px bg-stone-300"></span>
+              <span className="flex-1 h-px bg-stone-300"></span>
+              <span className="whitespace-nowrap">{t('settings.player_count')}</span>
+              <span className="flex-1 h-px bg-stone-300"></span>
             </h3>
             <div className="flex gap-2 flex-wrap justify-center">
               {[1, 2, 3, 4, 5, 6].map(num => (
                 <button
                   key={num}
-                  onClick={() => setLocalSettings(prev => ({ ...prev, playerCount: num }))}
+                  onClick={() => setPlayerCount(num)}
                   className={`w-12 h-12 rounded-xl font-serif text-xl border-2 transition-all ${localSettings.playerCount === num
                     ? 'bg-teal-600 border-teal-600 text-white shadow-md scale-105'
                     : 'bg-white border-stone-200 text-stone-500 hover:border-teal-400 hover:text-teal-600'
@@ -98,9 +109,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           {/* Expansions */}
           <section>
             <h3 className="text-stone-500 font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-              <span className="w-full h-px bg-stone-300"></span>
-              {t('settings.expansions')}
-              <span className="w-full h-px bg-stone-300"></span>
+              <span className="flex-1 h-px bg-stone-300"></span>
+              <span className="whitespace-nowrap">{t('settings.expansions')}</span>
+              <span className="flex-1 h-px bg-stone-300"></span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {EXPANSIONS.map(exp => (
@@ -123,19 +134,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           {/* Spirits */}
           <section>
             <h3 className="text-stone-500 font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-              <span className="w-full h-px bg-stone-300"></span>
-              {t('settings.select_spirits')} <span className="text-teal-600">({localSettings.selectedSpirits.length})</span>
-              <span className="w-full h-px bg-stone-300"></span>
+              <span className="flex-1 h-px bg-stone-300"></span>
+              <span className="whitespace-nowrap">
+                {t('settings.select_spirits')} <span className="text-teal-600">({localSettings.selectedSpirits.length} / {localSettings.playerCount})</span>
+              </span>
+              <span className="flex-1 h-px bg-stone-300"></span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {availableSpirits.map(spirit => (
                 <button
                   key={spirit.id}
                   onClick={() => toggleSpirit(spirit)}
+                  disabled={!localSettings.selectedSpirits.some(s => s.id === spirit.id) && localSettings.selectedSpirits.length >= localSettings.playerCount}
                   className={`text-sm p-3 rounded-lg border text-left transition-all shadow-sm ${localSettings.selectedSpirits.some(s => s.id === spirit.id)
                     ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-bold'
                     : 'bg-white border-stone-200 text-stone-500 hover:border-emerald-300 hover:text-emerald-700'
-                    }`}
+                    } ${!localSettings.selectedSpirits.some(s => s.id === spirit.id) && localSettings.selectedSpirits.length >= localSettings.playerCount ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
                 >
                   {t(`spirits.${spirit.id}`)}
                 </button>
@@ -146,9 +160,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           {/* Adversary */}
           <section>
             <h3 className="text-stone-500 font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-              <span className="w-full h-px bg-stone-300"></span>
-              {t('settings.adversary')}
-              <span className="w-full h-px bg-stone-300"></span>
+              <span className="flex-1 h-px bg-stone-300"></span>
+              <span className="whitespace-nowrap">{t('settings.adversary')}</span>
+              <span className="flex-1 h-px bg-stone-300"></span>
             </h3>
             <div className="space-y-4">
               <select
@@ -192,9 +206,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           {/* Scenario */}
           <section>
             <h3 className="text-stone-500 font-bold uppercase tracking-wider text-xs mb-3 flex items-center gap-2">
-              <span className="w-full h-px bg-stone-300"></span>
-              {t('settings.scenario')}
-              <span className="w-full h-px bg-stone-300"></span>
+              <span className="flex-1 h-px bg-stone-300"></span>
+              <span className="whitespace-nowrap">{t('settings.scenario')}</span>
+              <span className="flex-1 h-px bg-stone-300"></span>
             </h3>
             <select
               title={t('settings.scenario')}
@@ -222,10 +236,11 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ settings, onSave, onClo
           )}
           <button
             onClick={() => onSave(localSettings)}
+            disabled={localSettings.selectedSpirits.length !== localSettings.playerCount}
             className={`px-8 py-3 rounded-full font-bold shadow-lg transition-all active:scale-95 flex items-center gap-2 ${isInitialSetup
               ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white hover:shadow-amber-900/20 w-full sm:w-auto justify-center'
               : 'bg-stone-800 text-white hover:bg-stone-700'
-              }`}
+              } ${localSettings.selectedSpirits.length !== localSettings.playerCount ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
           >
             {isInitialSetup ? (
               <>
