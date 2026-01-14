@@ -91,6 +91,41 @@ const App: React.FC = () => {
     });
   }, [settings.expansions]);
 
+  // Swipe Logic
+  const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number, y: number } | null>(null);
+  const minSwipeDistance = 60;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distanceX = touchStart.x - touchEnd.x;
+    const distanceY = touchStart.y - touchEnd.y;
+
+    // Only trigger if horizontal movement is dominant and meets threshold
+    if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
+      if (distanceX > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+  };
+
   const currentPhase = activePhases[phaseIndex] || activePhases[0];
 
   const handleNext = () => {
@@ -338,7 +373,12 @@ const App: React.FC = () => {
 
       {/* Main Content Area */}
       {hasStarted ? (
-        <>
+        <div
+          className="flex-1 flex flex-col min-h-0"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           {/* Timeline - Fixed height flex item */}
           <div className={`flex-shrink-0 sticky top-[92px] md:top-[61px] z-20 transition-opacity duration-300 ${isPaused || showScoring ? 'opacity-30 pointer-events-none filter blur-sm' : 'opacity-100'}`}>
             <PhaseTimeline
@@ -402,8 +442,7 @@ const App: React.FC = () => {
             </div>
           )}
 
-
-        </>
+        </div>
       ) : (
         /* START SCREEN */
         <div className="flex-1 flex flex-col items-center justify-start p-8 text-center relative z-10 overflow-y-auto w-full max-w-4xl mx-auto">
