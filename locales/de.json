@@ -67,7 +67,10 @@
         "input_invader_cards_defeat": "Karten offen + Ablage",
         "points_per_dahan": "+1 Punkt pro {count} Dahan (aktuell: +{points})",
         "points_per_blight": "-1 Punkt pro {count} Verödung (aktuell: -{points})",
-        "points_per_card": "+{multiplier} Punkte pro Karte"
+        "points_per_card": "+{multiplier} Punkte pro Karte",
+        "terror_level": "Terrorstufe",
+        "victory_condition": "Siegbedingung",
+        "victory_condition_fear": "Alle Furchtkarten ausgespielt"
     },
     "phases": {
         "spirit-growth": {

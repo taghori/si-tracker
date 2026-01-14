@@ -82,4 +82,6 @@ export interface GameResult {
   scenario?: string;
   scenarioId?: string;
   expansions: ExpansionId[];
+  rounds: number;
+  terrorLevel?: number;
 }

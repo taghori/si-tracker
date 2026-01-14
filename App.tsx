@@ -486,6 +486,18 @@ const App: React.FC = () => {
                           <span>{game.playerCount} {t('common.players')}</span>
                           <span>•</span>
                           <span>{game.duration}</span>
+                          {game.rounds !== undefined && (
+                            <>
+                              <span>•</span>
+                              <span className="font-bold text-stone-600">{t('common.round')} {game.rounds}</span>
+                            </>
+                          )}
+                          {game.outcome === 'victory' && game.terrorLevel && (
+                            <>
+                              <span>•</span>
+                              <span className="text-amber-600 font-bold italic">TL {game.terrorLevel}</span>
+                            </>
+                          )}
                           {(game.adversary || game.scenario) && <span>•</span>}
                           {game.adversary && (
                             <span className="text-amber-700 bg-amber-50 px-1 rounded">
@@ -567,6 +579,7 @@ const App: React.FC = () => {
           settings={settings}
           onClose={() => setShowScoring(false)}
           onSaveGame={handleGameComplete}
+          currentRound={round}
         />
       )}
 

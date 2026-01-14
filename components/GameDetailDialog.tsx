@@ -70,6 +70,24 @@ const GameDetailDialog: React.FC<GameDetailDialogProps> = ({ game, onClose }) =>
                         </div>
                     </div>
 
+                    {/* Secondary Stats Row */}
+                    {(game.rounds !== undefined || (game.outcome === 'victory' && game.terrorLevel)) && (
+                        <div className="grid grid-cols-2 gap-4">
+                            {game.rounds !== undefined && (
+                                <div className="bg-white/50 p-4 rounded-xl border border-stone-200 text-center flex flex-col items-center justify-center">
+                                    <span className="block text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-1">{t('common.round')}</span>
+                                    <span className="text-xl font-bold text-stone-700">{game.rounds}</span>
+                                </div>
+                            )}
+                            {game.outcome === 'victory' && game.terrorLevel && (
+                                <div className="bg-amber-50 p-4 rounded-xl border border-amber-200 text-center flex flex-col items-center justify-center shadow-sm">
+                                    <span className="block text-[10px] text-amber-600 font-bold uppercase tracking-widest mb-1">{t('scoring.terror_level')}</span>
+                                    <span className="text-xl font-serif font-bold text-amber-600">{game.terrorLevel}</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Adversary & Scenario */}
                     {(game.adversary || game.scenario) && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

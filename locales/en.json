@@ -67,7 +67,10 @@
         "input_invader_cards_defeat": "Cards face up + discard",
         "points_per_dahan": "+1 point per {count} Dahan (current: +{points})",
         "points_per_blight": "-1 point per {count} Blight (current: -{points})",
-        "points_per_card": "+{multiplier} points per card"
+        "points_per_card": "+{multiplier} points per card",
+        "terror_level": "Terror Level",
+        "victory_condition": "Victory Condition",
+        "victory_condition_fear": "All Fear Cards played"
     },
     "phases": {
         "spirit-growth": {

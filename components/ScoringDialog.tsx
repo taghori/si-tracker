@@ -11,11 +11,12 @@ interface ScoringDialogProps {
   settings: GameSettings;
   onClose: () => void;
   onSaveGame: (result: GameResult) => void;
+  currentRound: number;
 }
 
 type GameOutcome = 'victory' | 'defeat';
 
-const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame }) => {
+const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame, currentRound }) => {
   const { t } = useI18n();
   const [step, setStep] = useState<'input' | 'result'>('input');
 
@@ -40,6 +41,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
   const [dahan, setDahan] = useState<number>(0);
   const [blight, setBlight] = useState<number>(0);
   const [invaderCards, setInvaderCards] = useState<number>(0);
+  const [terrorLevel, setTerrorLevel] = useState<number>(1);
 
   const calculateDetails = () => {
     let baseScore = 0;
@@ -93,7 +95,9 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
       expansions: settings.expansions,
       adversary: adv ? { name: t(`adversaries.${adv.id}`), level: settings.adversary!.level, id: adv.id } : undefined,
       scenario: sce ? t(`scenarios.${sce.id}`) : undefined,
-      scenarioId: sce?.id
+      scenarioId: sce?.id,
+      rounds: currentRound,
+      terrorLevel: outcome === 'victory' ? terrorLevel : undefined
     };
     onSaveGame(result);
   };
@@ -214,6 +218,38 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
               <span className="font-bold">{t('common.defeat')}</span>
             </button>
           </div>
+
+          <div className="flex justify-center items-center gap-4 py-2 bg-stone-100/50 rounded-xl border border-stone-200 shadow-inner">
+            <span className="text-stone-500 uppercase tracking-widest font-bold text-[10px]">{t('common.round')} {currentRound}</span>
+          </div>
+
+          {/* Terror Level (only if Victory) */}
+          {outcome === 'victory' && (
+            <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-200 space-y-3 animate-fade-in shadow-sm">
+              <label className="text-amber-800 uppercase tracking-wider font-bold text-xs block text-center mb-2">
+                {t('scoring.terror_level')}
+              </label>
+              <div className="flex justify-center gap-2">
+                {[1, 2, 3, 4].map(lvl => (
+                  <button
+                    key={lvl}
+                    onClick={() => setTerrorLevel(lvl)}
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center font-serif text-xl border-2 transition-all ${terrorLevel === lvl
+                      ? 'bg-amber-500 border-amber-500 text-white shadow-md scale-105'
+                      : 'bg-white border-amber-200 text-amber-500 hover:border-amber-400'
+                      }`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+              {terrorLevel === 4 && (
+                <p className="text-[10px] text-amber-700 font-bold text-center uppercase tracking-widest mt-2 px-2 italic">
+                  ({t('scoring.victory_condition_fear')})
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Difficulty */}
           <div className="bg-white/50 p-4 rounded-xl border border-stone-200 space-y-3">
