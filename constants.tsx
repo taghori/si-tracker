@@ -24,8 +24,8 @@ export const EXPANSIONS = [
   { id: ExpansionId.BASE },
   { id: ExpansionId.BRANCH_AND_CLAW },
   { id: ExpansionId.JAGGED_EARTH },
-  { id: ExpansionId.HORIZONS },
   { id: ExpansionId.NATURE_INCARNATE },
+  { id: ExpansionId.HORIZONS },
   { id: ExpansionId.FEATHER_AND_FLAME },
 ];
 
@@ -51,6 +51,8 @@ export const SPIRITS: Spirit[] = [
   { id: 'lure', expansionId: ExpansionId.JAGGED_EARTH },
   { id: 'starlight', expansionId: ExpansionId.JAGGED_EARTH },
   { id: 'fractured', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'trickster', expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'memory', expansionId: ExpansionId.JAGGED_EARTH },
   // Feather and Flame
   { id: 'wildfire', expansionId: ExpansionId.FEATHER_AND_FLAME },
   { id: 'serpent', expansionId: ExpansionId.FEATHER_AND_FLAME },
@@ -62,6 +64,15 @@ export const SPIRITS: Spirit[] = [
   { id: 'heat', expansionId: ExpansionId.HORIZONS },
   { id: 'whirlwind', expansionId: ExpansionId.HORIZONS },
   { id: 'teeth', expansionId: ExpansionId.HORIZONS },
+  // Nature Incarnate
+  { id: 'behemoth', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'hearth', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'roots', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'darkness', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'sun-gaze', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'voice', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'wounded', expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'earthquake', expansionId: ExpansionId.NATURE_INCARNATE },
 ];
 
 export const ADVERSARIES: Adversary[] = [
@@ -155,18 +166,38 @@ export const ADVERSARIES: Adversary[] = [
       { level: 5, difficulty: 8 },
       { level: 6, difficulty: 10 },
     ]
+  },
+  {
+    id: 'habsburg-mining',
+    expansionId: ExpansionId.NATURE_INCARNATE,
+    levels: [
+      { level: 0, difficulty: 1 },
+      { level: 1, difficulty: 3 },
+      { level: 2, difficulty: 4 },
+      { level: 3, difficulty: 5 },
+      { level: 4, difficulty: 7 },
+      { level: 5, difficulty: 9 },
+      { level: 6, difficulty: 10 },
+    ]
   }
 ];
 
 export const SCENARIOS: Scenario[] = [
   { id: 'blitz', difficulty: 0, expansionId: ExpansionId.BASE },
-  { id: 'dahan-insurrection', difficulty: 4, expansionId: ExpansionId.BASE },
   { id: 'guard-heart', difficulty: 0, expansionId: ExpansionId.BASE },
   { id: 'rituals-terror', difficulty: 3, expansionId: ExpansionId.BASE },
-  { id: 'ward-shores', difficulty: 2, expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'dahan-insurrection', difficulty: 4, expansionId: ExpansionId.BASE },
+  { id: 'second-wave', difficulty: 1, expansionId: ExpansionId.BRANCH_AND_CLAW },
   { id: 'powers-forgotten', difficulty: 1, expansionId: ExpansionId.BRANCH_AND_CLAW },
-  { id: 'elemental-invocation', difficulty: 0, expansionId: ExpansionId.JAGGED_EARTH },
-  { id: 'desperation', difficulty: 1, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'ward-shores', difficulty: 2, expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'rituals-flame', difficulty: 3, expansionId: ExpansionId.BRANCH_AND_CLAW },
+  { id: 'elemental-invocation', difficulty: 1, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'despicable-theft', difficulty: 2, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'great-river', difficulty: 3, expansionId: ExpansionId.JAGGED_EARTH },
+  { id: 'diversity-spirits', difficulty: 0, expansionId: ExpansionId.FEATHER_AND_FLAME },
+  { id: 'varied-terrains', difficulty: 2, expansionId: ExpansionId.FEATHER_AND_FLAME },
+  { id: 'destiny-unfolds', difficulty: -1, expansionId: ExpansionId.NATURE_INCARNATE },
+  { id: 'surges-colonization', difficulty: 2, expansionId: ExpansionId.NATURE_INCARNATE },
 ];
 
 export const GAME_PHASES: Phase[] = [

@@ -64,7 +64,7 @@
         "breakdown_blight": "Verödung ({count} / {players})",
         "input_dahan": "Überlebende Dahan",
         "input_blight": "Verödung",
-        "input_invader_cards_victory": "Karten im Nachziehstapel",
+        "input_invader_cards_victory": "Invasorenkarten im Nachziehstapel",
         "input_invader_cards_defeat": "Karten offen + Ablage",
         "points_per_dahan": "+1 Punkt pro {count} Dahan (aktuell: +{points})",
         "points_per_blight": "-1 Punkt pro {count} Verödung (aktuell: -{points})",
@@ -85,10 +85,8 @@
         },
         "fast-power": {
             "name": "Schnelle Kräfte",
-            "desc": "Schnelle Fähigkeiten (Vogel-Symbol) und angeborene Fähigkeiten abhandeln.",
-            "substeps": [
-                "Geister und Invasoren agieren hier gleichzeitig"
-            ]
+            "desc": "Alle schnellen Fähigkeiten abhandeln.",
+            "substeps": []
         },
         "invader-blight": {
             "name": "Verödete Insel",
@@ -108,7 +106,7 @@
         },
         "invader-build": {
             "name": "Bauen",
-            "desc": "Invasoren bauen Dörfer oder Städte in Gebieten mit Invasoren."
+            "desc": "Invasoren bauen in jedem Gebiet, das zu einer Invasorenkarte auf dem Bauen-Feld passt."
         },
         "invader-explore": {
             "name": "Entdecken",
@@ -148,8 +146,10 @@
         "stone": "Steins unbeugsame Haltung",
         "many-minds": "Viele Geister wirken als Einer",
         "lure": "Lockruf der tiefen Wildnis",
-        "starlight": "Sternenlicht sucht seine Gestalt",
-        "fractured": "Gebrochene Tage zerteilen den Himmel",
+        "starlight": "Sternenlicht sucht seine Form",
+        "fractured": "Zersplitterte Tage spalten den Himmel",
+        "trickster": "Grinsender Schalk stiftet Unruhe",
+        "memory": "Wandelndes Gedächtnis der Äonen",
         "wildfire": "Seele des Flächenbrands",
         "serpent": "Unter der Insel schlummernde Schlange",
         "downpour": "Sturzregen durchnässt die Welt",
@@ -158,33 +158,49 @@
         "mud": "Bodenloser Schlamm der Sümpfe",
         "heat": "Zunehmende Hitze in Stein und Sand",
         "whirlwind": "Sonnenheller Wirbelwind",
-        "teeth": "Unterirdisch lauernde Reißzähne"
+        "teeth": "Gefräßiges Gebiss lauert im Untergrund",
+        "behemoth": "Glutäugiger Behemoth",
+        "hearth": "Wächter der Feuerstelle",
+        "roots": "Mächtige Wurzeln des Dschungels",
+        "darkness": "Hauch der Finsternis im Rücken",
+        "sun-gaze": "Unerbittlicher Blick der Sonne",
+        "voice": "Klagende Stimme des Wahnsinns",
+        "wounded": "Verwundete Wasser bluten",
+        "earthquake": "Bebende Erde tanzt"
     },
     "adversaries": {
         "prussia": "Königreich Brandenburg-Preußen",
         "england": "Königreich England",
         "sweden": "Königreich Schweden",
         "france": "Königreich Frankreich (Plantagenkolonie)",
-        "habsburg": "Habsburger-Monarchie (Viehzüchterkolonie)",
+        "habsburg": "Habsburgische Monarchie (Viehzucht-Kolonie)",
         "russia": "Zarentum Russland",
-        "scotland": "Königreich Schottland"
+        "scotland": "Königreich Schottland",
+        "habsburg-mining": "Habsburgische Bergbau-Expedition"
     },
     "scenarios": {
         "blitz": "Blitz",
-        "dahan-insurrection": "Dahan-Aufstand",
-        "guard-heart": "Wache das Herz der Insel",
+        "guard-heart": "Schützt das Herz der Insel",
         "rituals-terror": "Rituale des Schreckens",
-        "ward-shores": "Die Küsten bewachen",
-        "powers-forgotten": "Lange vergessene Kräfte",
+        "dahan-insurrection": "Aufstand der Dahan",
+        "second-wave": "Zweite Welle",
+        "powers-forgotten": "Längst vergessene Mächte",
+        "ward-shores": "Bewacht die Küsten",
+        "rituals-flame": "Rituale der vernichtenden Flammen",
         "elemental-invocation": "Elementare Anrufung",
-        "desperation": "Verzweiflung"
+        "despicable-theft": "Niederträchtiger Diebstahl",
+        "great-river": "Der große Fluss",
+        "diversity-spirits": "Geistervielfalt",
+        "varied-terrains": "Abwechslungsreiche Landschaften",
+        "destiny-unfolds": "Das Schicksal entfaltet sich",
+        "surges-colonization": "Wellen der Kolonisierung"
     },
     "expansions": {
         "base": "Grundspiel",
         "branch_and_claw": "Ast und Tatze",
         "jagged_earth": "Zerklüftete Erde",
         "horizons": "Horizonte",
-        "nature_incarnate": "Natur Erwacht",
+        "nature_incarnate": "Natur erwacht",
         "feather_and_flame": "Feder und Flamme"
     },
     "details": {

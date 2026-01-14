@@ -80,16 +80,24 @@ const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [hasStarted, isPaused, showScoring]);
 
-  // Filter phases based on active expansions
-  const activePhases = useMemo(() => {
+  // Helper to filter phases based on round and settings
+  const getPhasesForRound = (r: number) => {
     return GAME_PHASES.filter(phase => {
       if (phase.requiresEvents) {
+        // Skip Event phase on Round 1
+        if (r === 1) return false;
+
         return settings.expansions.includes(ExpansionId.BRANCH_AND_CLAW) ||
           settings.expansions.includes(ExpansionId.JAGGED_EARTH);
       }
       return true;
     });
-  }, [settings.expansions]);
+  };
+
+  // Filter phases based on active expansions and round
+  const activePhases = useMemo(() => {
+    return getPhasesForRound(round);
+  }, [settings.expansions, round]);
 
   // Swipe Logic
   const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
@@ -140,8 +148,10 @@ const App: React.FC = () => {
   const handlePrev = () => {
     if (phaseIndex <= 0) {
       if (round > 1) {
-        setRound(r => r - 1);
-        setPhaseIndex(activePhases.length - 1);
+        const prevRound = round - 1;
+        const prevPhases = getPhasesForRound(prevRound);
+        setRound(prevRound);
+        setPhaseIndex(prevPhases.length - 1);
       }
     } else {
       setPhaseIndex(prev => prev - 1);
