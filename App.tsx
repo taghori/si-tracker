@@ -557,9 +557,13 @@ const App: React.FC = () => {
         <ScoringDialog
           initialOutcome={scoringInitialOutcome}
           settings={settings}
-          elapsedSeconds={elapsedSeconds}
-          rounds={round}
-          onSave={actions.handleGameComplete}
+          elapsedTime={formatTime(elapsedSeconds)}
+          currentRound={round}
+          invaderDeckState={{
+            remaining: Math.max(0, invaderDeck.length - (round + 1)),
+            discarded: Math.min(invaderDeck.length, round + 1)
+          }}
+          onSaveGame={actions.handleGameComplete}
           onClose={() => actions.setShowScoring(false)}
         />
       )}

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { X, Trophy, Skull, Calculator, Clock, Save, Flame, TreeDeciduous, Play } from 'lucide-react';
-import { GameResult, Spirit, GameSettings } from '../types';
+import { X, Trophy, Skull, Calculator, Clock, Save, Flame, TreeDeciduous } from 'lucide-react';
+import { GameResult, GameSettings } from '../types';
 import { ADVERSARIES, SCENARIOS } from '../constants';
 import { useI18n } from '../services/i18n';
 
 interface ScoringDialogProps {
-  playerCount: number;
-  spirits: Spirit[];
-  elapsedTime: string;
   settings: GameSettings;
+  elapsedTime: string;
+  currentRound: number;
+  invaderDeckState: {
+    remaining: number;
+    discarded: number;
+  };
   onClose: () => void;
   onSaveGame: (result: GameResult) => void;
   initialOutcome?: GameOutcome;
@@ -16,9 +19,21 @@ interface ScoringDialogProps {
 
 type GameOutcome = 'victory' | 'defeat';
 
-const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame, currentRound, initialOutcome = 'victory' }) => {
+const ScoringDialog: React.FC<ScoringDialogProps> = ({
+  settings,
+  elapsedTime,
+  currentRound,
+  invaderDeckState,
+  onClose,
+  onSaveGame,
+  initialOutcome = 'victory'
+}) => {
   const { t } = useI18n();
   const [step, setStep] = useState<'input' | 'result'>('input');
+
+  // Derive values from settings
+  const playerCount = settings.playerCount || 1;
+  const spirits = settings.selectedSpirits;
 
   // Calculate initial difficulty from settings
   const initialDifficulty = React.useMemo(() => {
@@ -40,8 +55,21 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
   const [difficulty, setDifficulty] = useState<number>(initialDifficulty);
   const [dahan, setDahan] = useState<number>(0);
   const [blight, setBlight] = useState<number>(0);
-  const [invaderCards, setInvaderCards] = useState<number>(0);
+
+  // Auto-fill invader cards based on calculated state and outcome
+  const [invaderCards, setInvaderCards] = useState<number>(
+    initialOutcome === 'victory' ? invaderDeckState.remaining : invaderDeckState.discarded
+  );
   const [terrorLevel, setTerrorLevel] = useState<number>(1);
+
+  // Effect: Update invader cards when outcome changes
+  React.useEffect(() => {
+    if (outcome === 'victory') {
+      setInvaderCards(invaderDeckState.remaining);
+    } else {
+      setInvaderCards(invaderDeckState.discarded);
+    }
+  }, [outcome, invaderDeckState]);
 
   const calculateDetails = () => {
     let baseScore = 0;
@@ -178,7 +206,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
   // Input Step
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-md p-4 animate-fade-in">
-      <div className="bg-parchment-100 border border-stone-300 rounded-2xl w-full max-md flex flex-col shadow-2xl relative overflow-hidden">
+      <div className="bg-parchment-100 border border-stone-300 rounded-2xl w-full max-w-lg flex flex-col shadow-2xl relative overflow-hidden">
 
         {/* Paper Texture Overlay */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-40 mix-blend-multiply pointer-events-none" />
