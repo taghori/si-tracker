@@ -17,7 +17,8 @@
         "difficulty": "Schwierigkeit",
         "duration": "Dauer",
         "confirm_delete": "Eintrag löschen?",
-        "confirm_reset": "Möchtest du das Spiel wirklich abbrechen (ohne Wertung) und zur Auswahl zurückkehren?"
+        "confirm_reset": "Möchtest du das Spiel wirklich abbrechen (ohne Wertung) und zur Auswahl zurückkehren?",
+        "invader_track_title": "INVASOREN-AKTIONEN"
     },
     "header": {
         "title_main": "Spirit Island",
@@ -74,6 +75,10 @@
         "victory_condition_fear": "Alle Furchtkarten ausgespielt"
     },
     "phases": {
+        "england-high-immigration": {
+            "name": "Hohe Einwanderung (Bauen)",
+            "desc": "Führe die Bauen-Aktion der Hohen Einwanderung aus."
+        },
         "spirit-growth": {
             "name": "Geister-Phase",
             "desc": "Wachsen, Energie erhalten und Fähigkeitenkarten spielen.",
@@ -199,14 +204,145 @@
         "base": "Grundspiel",
         "branch_and_claw": "Ast und Tatze",
         "jagged_earth": "Zerklüftete Erde",
-        "horizons": "Horizonte",
-        "nature_incarnate": "Natur erwacht",
-        "feather_and_flame": "Feder und Flamme"
+        "horizons": "Horizons of Spirit Island",
+        "nature_incarnate": "Natur Erwacht",
+        "feather_and_flame": "Feder & Flamme"
     },
     "details": {
         "victory_title": "Glorreicher Sieg",
         "defeat_title": "Bittere Niederlage",
         "spirits_title": "Teilnehmende Geister",
         "expansions_title": "Aktive Erweiterungen"
+    },
+    "adversary_rules": {
+        "title": "Widersacher-Regel",
+        "setup_title": "Spielaufbau",
+        "escalation": "Eskalation",
+        "loss_condition": "Zusätzliche Niederlage-Bedingung",
+        "active_levels": "Aktive Stufen-Effekte",
+        "no_rules": "Keine spezifischen Regeln für diese Stufe.",
+        "fear_setup": "Furchtkarten",
+        "fear_desc": "Karten pro Stapel-Ebene (oben nach unten)",
+        "deck_setup": "Invasoren-Deck",
+        "deck_desc": "Reihenfolge der Invasorenkarten (1=Stufe I, 2=Stufe II, 3=Stufe III)",
+        "additional_rules": "Aufbau-Anweisungen",
+        "no_setup_changes": "Keine zusätzlichen Aufbau-Anweisungen für diese Stufe."
+    },
+    "adversary_data": {
+        "prussia": {
+            "escalation": {
+                "name": "Landnahme",
+                "description": "Auf jedem Spielplan mit Stadt / Dorf: +1 Dorf in 1 Gebiet ohne Dorf (eure Wahl)."
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Landnahme: Auf jedem Spielplan mit Stadt / Dorf: +1 Dorf in 1 Gebiet ohne Dorf (eure Wahl)."
+            },
+            "levels": {
+                "1": {
+                    "name": "Schnellstart",
+                    "effect": "Stellt bei der Spielvorbereitung +1 Dorf in jedes Gebiet Nr. 3."
+                },
+                "2": {
+                    "name": "Welle von Kolonisten",
+                    "effect": "Schiebt beim Vorbereiten des Invasoren-Stapels 1 der Stufe III Invasoren-Karte zwischen Stufe I und Stufe II. (Neue Kartenreihenfolge: 111-3-2222-3333)"
+                },
+                "3": {
+                    "name": "Effizienz",
+                    "effect": "Reduziert den Invasoren-Stapel um 1 Stufe I Karte. (Neue Kartenreihenfolge: 11-3-2222-3333)"
+                },
+                "4": {
+                    "name": "Erhöhter Zeitdruck",
+                    "effect": "Reduziert den Invasoren-Stapel zudem um 1 Stufe II Karte. (Neue Kartenreihenfolge: 11-3-222-3333)"
+                },
+                "5": {
+                    "name": "Gnadenlose Effizienz",
+                    "effect": "Reduziert den Invasoren-Stapel um 1 weitere Stufe I Karte. (Neue Kartenreihenfolge: 1-3-222-3333)"
+                },
+                "6": {
+                    "name": "Totale Effizienz",
+                    "effect": "Reduziert den Invasoren-Stapel um alle Stufe I Karten. (Neue Kartenreihenfolge: 3-222-3333)"
+                }
+            }
+        },
+        "england": {
+            "escalation": {
+                "name": "Bau-Boom",
+                "description": "Zusätzliche Aktion „Bauen“ auf jedem Insel-Spielplan mit Dorf / Stadt im Gebiet mit den meisten Dorf / Stadt."
+            },
+            "loss_condition": {
+                "name": "Mächtige Hauptstadt",
+                "description": "7 oder mehr Dorf/Stadt in 1 Gebiet: Spieler verlieren sofort."
+            },
+            "phaseHints": {
+                "indentured_servants": "Schuldknechte erhalten Land: „Bauen“ auch in Gebieten ohne Invasoren ausführen, wenn sich vor der Aktion mindestens 2 Dorf / Stadt in angrenzenden Gebieten befinden.",
+                "high_immigration": "Hohe Einwanderung: Führe die zusätzliche Bauen-Aktion auf dem Feld 'Hohe Einwanderung' aus.",
+                "local_autonomy": "Lokale Autonomie: Dorf / Stadt haben +1 Abwehrkraft."
+            },
+            "levels": {
+                "1": {
+                    "name": "Schuldknechte erhalten Land",
+                    "effect": "„Bauen“ auch in Gebieten ohne Invasoren ausführen, wenn sich vor der Aktion mindestens 2 Dorf / Stadt in angrenzenden Gebieten befinden."
+                },
+                "2": {
+                    "name": "Kriminelle und Querulanten",
+                    "effect": "Stellt bei der Spielvorbereitung +1 Stadt in jedes Gebiet Nr. 1 und +1 Dorf in jedes Gebiet Nr. 2."
+                },
+                "3": {
+                    "name": "Hohe Einwanderung (I)",
+                    "effect": "Legt das Nationen-Plättchen „Hohe Einwanderung“ links vom „Wüten“-Feld auf das Invasoren-Tableau. Die Invasoren führen vor jeder „Wüten“-Aktion eine weitere „Bauen“-Aktion aus. Verschiebt Karten vom „Wüten“-Feld nach links dorthin und von dort auf den Ablagestapel. Entfernt das Plättchen, sobald eine „Stufe II“-Karte dort landet und legt die Karte sofort ab."
+                },
+                "4": {
+                    "name": "Hohe Einwanderung (dauerhaft)",
+                    "effect": "Das Plättchen (s.o.) liegt das gesamte Spiel über aus."
+                },
+                "5": {
+                    "name": "Lokale Autonomie",
+                    "effect": "Dorf / Stadt haben +1 Abwehrkraft."
+                },
+                "6": {
+                    "name": "Unabhängigkeit",
+                    "setup_rule": "Spielvorbereitung: +1 Furcht pro Spieler in den Furcht-Vorrat.",
+                    "effect": "In Invasoren-Phasen ohne abgehandelte Furchtkarten: Führt die „Bauen“-Aktion der „Hohen Einwanderung“ zweimal nacheinander aus. (Ohne Karte dort kein Effekt.)"
+                }
+            }
+        },
+        "sweden": {
+            "escalation": {
+                "name": "Einfluss der Invasoren",
+                "description": "Wenn nach „Entdecken“ in einem Gebiet mindestens so viele Invasoren wie Dahan : Ersetze 1 Dahan durch 1 Dorf."
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Einfluss der Invasoren: Wenn nach „Entdecken“ in einem Gebiet mindestens so viele Invasoren wie Dahan : Ersetze 1 Dahan durch 1 Dorf.",
+                "heavy_mining": "Massiver Bergbau: „Wüten“: Fügen Invasoren 1 Gebiet mind. 6 Schaden zu: +1 Verödung. Dies vernichtet keine Präsenz und löst keine Ausbreitung aus.",
+                "fine_steel": "Waffenfähiger Stahl: Dorf fügen 3 Schaden zu, Stadt 5 Schaden.",
+                "mining_rush": "Bergbau-Boom: „Wüten“: Wird in 1 Gebiet Verödung hinzugefügt: +1 Dorf in 1 angrenzendes Gebiet ohne Dorf / Stadt. Nicht bei Verödung wegen Ausbreitung."
+            },
+            "levels": {
+                "1": {
+                    "name": "Massiver Bergbau",
+                    "effect": "„Wüten“: Fügen Invasoren 1 Gebiet mind. 6 Schaden zu: +1 Verödung. Dies vernichtet keine Präsenz und löst keine Ausbreitung aus."
+                },
+                "2": {
+                    "name": "Auswanderungsboom",
+                    "effect": "Stellt bei der Spielvorbereitung +1 Stadt in jedes Gebiet Nr. 4. Auf Insel-Spielplänen mit Verödung in Gebiet Nr. 4, versetzt Verödung in Gebiet Nr. 5."
+                },
+                "3": {
+                    "name": "Waffenfähiger Stahl",
+                    "effect": "Dorf fügen 3 Schaden zu, Stadt 5 Schaden."
+                },
+                "4": {
+                    "name": "Mit Hilfe des Königs",
+                    "effect": "Spielvorbereitung: Sind alle Invasoren auf der Insel platziert, legt die oberste Invasorenkarte offen auf die Ablage. In dem Gebiet dieser Art mit den wenigsten Invasoren auf jedem Spielplan: +1 Dorf. Dies geschieht VOR der Startaktion der Invasoren."
+                },
+                "5": {
+                    "name": "Bergbau-Boom",
+                    "effect": "„Wüten“: Wird in 1 Gebiet Verödung hinzugefügt: +1 Dorf in 1 angrenzendes Gebiet ohne Dorf / Stadt. Nicht bei Verödung wegen Ausbreitung."
+                },
+                "6": {
+                    "name": "Schürf-Außenposten",
+                    "effect": "Spielvorbereitung: Stellt bei der Spielvorbereitung +1 Dorf und +1 Verödung in jedes Gebiet Nr. 8. Verödung aus der Schachtel nehmen, nicht von der Ödnis-Karte."
+                }
+            }
+        }
     }
 }

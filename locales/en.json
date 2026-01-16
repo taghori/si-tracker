@@ -17,7 +17,8 @@
         "difficulty": "Difficulty",
         "duration": "Duration",
         "confirm_delete": "Delete entry?",
-        "confirm_reset": "Do you really want to cancel the game (without scoring) and return to the selection?"
+        "confirm_reset": "Do you really want to cancel the game (without scoring) and return to the selection?",
+        "invader_track_title": "INVADER ACTIONS"
     },
     "header": {
         "title_main": "Spirit Island",
@@ -74,6 +75,10 @@
         "victory_condition_fear": "All Fear Cards played"
     },
     "phases": {
+        "england-high-immigration": {
+            "name": "High Immigration (Build)",
+            "desc": "Perform the High Immigration Build action."
+        },
         "spirit-growth": {
             "name": "Spirit Phase",
             "desc": "Growth, gain energy, and play power cards.",
@@ -208,5 +213,136 @@
         "defeat_title": "Bitter Defeat",
         "spirits_title": "Participating Spirits",
         "expansions_title": "Active Expansions"
+    },
+    "adversary_rules": {
+        "title": "Adversary Rule",
+        "setup_title": "Game Setup",
+        "escalation": "Escalation",
+        "loss_condition": "Additional Loss Condition",
+        "active_levels": "Active Level Effects",
+        "no_rules": "No specific rules for this level.",
+        "fear_setup": "Fear Cards",
+        "fear_desc": "Cards per deck level (top to bottom)",
+        "deck_setup": "Invader Deck",
+        "deck_desc": "Order of Invader cards (1=Stage I, 2=Stage II, 3=Stage III)",
+        "additional_rules": "Setup Instructions",
+        "no_setup_changes": "No additional setup changes for this level."
+    },
+    "adversary_data": {
+        "prussia": {
+            "escalation": {
+                "name": "Land Rush",
+                "description": "On each board with Town/City, add 1 Town to a land without Town."
+            },
+            "phaseHints": {
+                "escalation": "Escalation: On each board with Town/City, add 1 Town to a land without Town."
+            },
+            "levels": {
+                "1": {
+                    "name": "Fast Start",
+                    "effect": "During Setup, on each board add 1 Town to land #3."
+                },
+                "2": {
+                    "name": "Surge of Colonists",
+                    "effect": "When making the Invader Deck, put 1 of the Stage III cards between Stage I and Stage II. (New Deck Order: 111-3-2222-3333)"
+                },
+                "3": {
+                    "name": "Efficient",
+                    "effect": "When making the Invader Deck, remove an additional Stage I card. (New Deck Order: 11-3-2222-3333)"
+                },
+                "4": {
+                    "name": "Aggressive Timetable",
+                    "effect": "When making the Invader Deck, remove an additional Stage II card. (New Deck Order: 11-3-222-3333)"
+                },
+                "5": {
+                    "name": "Ruthlessly Efficient",
+                    "effect": "When making the Invader Deck, remove an additional Stage I card. (New Deck Order: 1-3-222-3333)"
+                },
+                "6": {
+                    "name": "Terrifyingly Efficient",
+                    "effect": "When making the Invader Deck, remove all Stage I cards. (New Deck Order: 3-222-3333)"
+                }
+            }
+        },
+        "england": {
+            "escalation": {
+                "name": "Building Boom",
+                "description": "On each board with Town/City, build in a land with the most Town/City."
+            },
+            "loss_condition": {
+                "name": "Proud & Mighty Capital",
+                "description": "If 7 or more Town/City are ever in a single land, the Invaders win."
+            },
+            "phaseHints": {
+                "indentured_servants": "Indentured Servants: Invader Build Cards affect lands without Invaders if adjacent to 2+ Town/City.",
+                "high_immigration": "High Immigration: Perform the extra Build action on the High Immigration tile.",
+                "local_autonomy": "Local Autonomy: Town/City have +1 Health."
+            },
+            "levels": {
+                "1": {
+                    "name": "Indentured Servants Earn Land",
+                    "effect": "Invader Build Cards affect matching lands without Invaders if they are adjacent to at least 2 Town/City."
+                },
+                "2": {
+                    "name": "Criminals and Malcontents",
+                    "effect": "During Setup, on each board add 1 City to land #1 and 1 Town to land #2."
+                },
+                "3": {
+                    "name": "High Immigration (I)",
+                    "effect": "Put the 'High Immigration' tile on the Invader board, to the left of 'Ravage'. The Invaders take this Build action each Invader phase before Ravaging. Cards slide left from Ravage to it, and from it to the discard pile. Remove the tile when a Stage II card slides onto it, putting that card in the discard."
+                },
+                "4": {
+                    "name": "High Immigration (full)",
+                    "effect": "The extra Build tile remains out the entire game."
+                },
+                "5": {
+                    "name": "Local Autonomy",
+                    "effect": "Town/City have +1 Health."
+                },
+                "6": {
+                    "name": "Independent Resolve",
+                    "setup_rule": "Add 1 Fear per player to the Fear Pool.",
+                    "effect": "During any Invader Phase where you resolve no Fear Cards, perform the High Immigration Build twice. (Has no effect if no card is in the High Immigration slot.)"
+                }
+            }
+        },
+        "sweden": {
+            "escalation": {
+                "name": "Swayed by the Invaders",
+                "description": "After Invaders Explore into each land this Phase, if that land has at least as many Invaders as Dahan, replace 1 Dahan with 1 Town."
+            },
+            "phaseHints": {
+                "escalation": "Escalation: Swayed by the Invaders: After Invaders Explore into each land this Phase, if that land has at least as many Invaders as Dahan, replace 1 Dahan with 1 Town.",
+                "heavy_mining": "Heavy Mining: If the Invaders do at least 6 Damage to the land during Ravage, add an extra Blight. The additional Blight does not destroy Presence or cause cascades.",
+                "fine_steel": "Fine Steel for Tools and Guns: Town deal 3 Damage. City deal 5 Damage.",
+                "mining_rush": "Mining Rush: When Ravaging adds at least 1 Blight to a land, also add 1 Town to an adjacent land without Town/City. Cascading Blight does not cause this effect."
+            },
+            "levels": {
+                "1": {
+                    "name": "Heavy Mining",
+                    "effect": "If the Invaders do at least 6 Damage to the land during Ravage, add an extra Blight. The additional Blight does not destroy Presence or cause cascades."
+                },
+                "2": {
+                    "name": "Population Pressure at Home",
+                    "effect": "During Setup, on each board add 1 City to land #4. On boards where land #4 starts with Blight, put that Blight in land #5 instead."
+                },
+                "3": {
+                    "name": "Fine Steel for Tools and Guns",
+                    "effect": "Town deal 3 Damage. City deal 5 Damage."
+                },
+                "4": {
+                    "name": "Royal Backing",
+                    "effect": "During Setup, after adding all other Invaders, Accelerate the Invader Deck. On each board, add 1 Town to the land of that terrain with the fewest Invaders."
+                },
+                "5": {
+                    "name": "Mining Rush",
+                    "effect": "When Ravaging adds at least 1 Blight to a land, also add 1 Town to an adjacent land without Town/City. Cascading Blight does not cause this effect."
+                },
+                "6": {
+                    "name": "Prospecting Outpost",
+                    "effect": "During setup, on each board add 1 Town and 1 Blight to land #8. The Blight comes from the box, not the Blight Card."
+                }
+            }
+        }
     }
 }

@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useI18n } from './services/i18n';
 import { GAME_PHASES } from './constants';
-import { GameSettings, ExpansionId, GameResult } from './types';
+import { GameSettings, ExpansionId, GameResult, PhaseCategory } from './types';
 import PhaseCard from './components/PhaseCard';
 import PhaseTimeline from './components/PhaseTimeline';
+import { parseInvaderDeck } from './utils/invaderDeck';
+import { ADVERSARIES } from './constants';
 
 import SettingsDialog from './components/SettingsDialog';
 import ScoringDialog from './components/ScoringDialog';
@@ -22,6 +24,10 @@ const formatTime = (totalSeconds: number) => {
   }
   return `${pad(minutes)}:${pad(seconds)}`;
 };
+
+import SetupDialog from './components/SetupDialog';
+import AdversaryRules from './components/AdversaryRules';
+import { ShieldAlert, BookOpen } from 'lucide-react';
 
 const App: React.FC = () => {
   const { t, language, setLanguage } = useI18n();
@@ -42,6 +48,9 @@ const App: React.FC = () => {
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [showSettings, setShowSettings] = useState(false); // Changed default to false
   const [showScoring, setShowScoring] = useState(false);
+  const [showSetup, setShowSetup] = useState(false);
+  const [showRules, setShowRules] = useState(false);
+  const [scoringInitialOutcome, setScoringInitialOutcome] = useState<'victory' | 'defeat'>('victory');
 
   // Data State
   const [settings, setSettings] = useState<GameSettings>({
@@ -82,7 +91,7 @@ const App: React.FC = () => {
 
   // Helper to filter phases based on round and settings
   const getPhasesForRound = (r: number) => {
-    return GAME_PHASES.filter(phase => {
+    let phases = GAME_PHASES.filter(phase => {
       if (phase.requiresEvents) {
         // Skip Event phase on Round 1
         if (r === 1) return false;
@@ -92,7 +101,106 @@ const App: React.FC = () => {
       }
       return true;
     });
+
+    // Check for England Level 3+ "High Immigration" Injection
+    if (settings.adversary?.id === 'england' && settings.adversary.level >= 3) {
+      // Determine if the phase should be active
+      let isHighImmigrationActive = true;
+
+      // Level 3 specific rule: Remove when Stage II card hits it.
+      if (settings.adversary.level === 3) {
+        // Calculate Deck to find first Stage II card
+        let deckString = "111-2222-33333";
+        const adv = ADVERSARIES.find(a => a.id === 'england'); // We know it's England
+        // Check for specific deck overrides (England usually doesn't, but for robustness)
+        for (let l = settings.adversary.level; l >= 0; l--) {
+          const lvlData = adv?.levels.find(lvl => lvl.level === l);
+          if (lvlData?.invaderDeck) {
+            deckString = lvlData.invaderDeck;
+            break;
+          }
+        }
+        const deck = parseInvaderDeck(deckString);
+        const firstStage2Index = deck.findIndex(c => c === 2);
+
+        if (firstStage2Index !== -1) {
+          // Card moves with Initial Explore rule:
+          // Setup: Explore Card #1 (Index 0).
+          // Round 1: Build Card #1 (Index 0). Explore Card #2 (Index 1).
+          // Round 2: Ravage Card #1. Build Card #2. Explore Card #3.
+          // Round 3: High Imm Card #1. Ravage Card #2...
+          // Formula: Card (Index i) hits High Imm at Round = i + 3.
+          // Example: Card #4 (Index 3, first Stage II) hits High Imm at Round 3 + 3 = 6.
+          const removalRound = firstStage2Index + 3;
+          if (r >= removalRound) {
+            isHighImmigrationActive = false;
+          }
+        }
+      }
+
+      if (isHighImmigrationActive) {
+        // High Immigration happens before Ravage (usually Phase Index 5 in standard array)
+        // Find Ravage index
+        const ravageIndex = phases.findIndex(p => p.id === 'invader-ravage');
+        if (ravageIndex !== -1) {
+          const highImmigrationPhase = {
+            id: 'england-high-immigration',
+            name: t('phases.england-high-immigration.name'),
+            // We reuse 'invader-build' category for color/style, or add a custom one if we defined colors.
+            // Let's use 'invader-build' to make it look like a build phase.
+            category: PhaseCategory.INVADER,
+            description: t('phases.england-high-immigration.desc'),
+            iconName: 'Hammer', // Assuming Hammer icon exists or is mapped
+            color: 'text-amber-600',
+            substeps: ["Build in High Immigration land"]
+          };
+          // Insert before Ravage
+          const newPhases = [...phases];
+          newPhases.splice(ravageIndex, 0, highImmigrationPhase);
+          phases = newPhases;
+        }
+      }
+    }
+
+    return phases;
   };
+
+  // Determine Current Invader Deck and Stage
+  const invaderDeckArray = useMemo(() => {
+    let deckString = "111-2222-33333"; // Standard default
+    if (settings.adversary?.id) {
+      const adv = ADVERSARIES.find(a => a.id === settings.adversary!.id);
+      if (adv) {
+        for (let l = settings.adversary.level; l >= 0; l--) {
+          const lvlData = adv.levels.find(lvl => lvl.level === l);
+          if (lvlData?.invaderDeck) {
+            deckString = lvlData.invaderDeck;
+            break;
+          }
+        }
+      }
+    }
+    return parseInvaderDeck(deckString);
+  }, [settings.adversary]);
+
+  const invaderStage = useMemo(() => {
+    const cardIndex = round;
+    // Return undefined if out of bounds (deck empty), otherwise the stage.
+    // If we want "infinite level 3" for sandbox play, we need a toggle.
+    // But per rules: Empty deck = Loss.
+    return invaderDeckArray[cardIndex];
+  }, [invaderDeckArray, round]);
+
+  // Check for Defeat Condition: Empty Invader Deck during Explore
+  useEffect(() => {
+    const currentPhase = getPhasesForRound(round)[phaseIndex];
+    if (hasStarted && !showScoring && currentPhase?.id === 'invader-explore' && invaderStage === undefined) {
+      // Auto-trigger scoring for Defeat (Silent transition)
+      setScoringInitialOutcome('defeat');
+      setShowScoring(true);
+    }
+  }, [round, phaseIndex, invaderStage, hasStarted, showScoring]);
+
 
   // Filter phases based on active expansions and round
   const activePhases = useMemo(() => {
@@ -178,12 +286,23 @@ const App: React.FC = () => {
     setSettings(newSettings);
     setShowSettings(false);
 
-    // If it was the initial setup, start the game now
+    // If it was the initial setup...
     if (!hasStarted) {
-      setHasStarted(true);
-      setPhaseIndex(0);
-      setRound(1);
+      // Check if we need to show Setup Dialog (only if Adversary is active)
+      if (newSettings.adversary && newSettings.adversary.id) {
+        setShowSetup(true);
+      } else {
+        // Start immediately if no adversary
+        startGame();
+      }
     }
+  };
+
+  const startGame = () => {
+    setHasStarted(true);
+    setPhaseIndex(0);
+    setRound(1);
+    setShowSetup(false);
   };
 
   const handleGameComplete = (result: GameResult) => {
@@ -319,10 +438,24 @@ const App: React.FC = () => {
               </div>
             )}
 
+            {hasStarted && settings.adversary && (
+              <button
+                onClick={() => setShowRules(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-colors border border-amber-200"
+                title={t('header.rules')}
+              >
+                <BookOpen className="w-4 h-4" />
+                <span className="text-xs font-bold hidden lg:inline uppercase tracking-wide">{t('header.rules')}</span>
+              </button>
+            )}
+
             <div className="flex items-center">
               {hasStarted && (
                 <button
-                  onClick={() => setShowScoring(true)}
+                  onClick={() => {
+                    setScoringInitialOutcome('victory');
+                    setShowScoring(true);
+                  }}
                   className="ml-2 pr-4 pl-3 py-1.5 md:py-2 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200 transition-all active:scale-95 flex items-center gap-2 shadow-sm"
                   title={t('header.end_game')}
                 >
@@ -401,7 +534,13 @@ const App: React.FC = () => {
           {/* Card Area */}
           <main className={`flex-1 relative z-10 flex flex-col items-center justify-start p-2 md:p-8 pb-32 transition-all duration-300 ${isPaused || showScoring ? 'opacity-30 pointer-events-none filter blur-md scale-95' : 'opacity-100 scale-100'}`}>
             <div className="w-full max-w-2xl py-2 md:py-4 flex-shrink-0 mx-auto">
-              <PhaseCard phase={currentPhase} round={round} />
+              <PhaseCard
+                phase={currentPhase}
+                round={round}
+                settings={settings}
+                invaderStage={invaderStage}
+                invaderDeck={invaderDeckArray}
+              />
             </div>
           </main>
 
@@ -428,7 +567,10 @@ const App: React.FC = () => {
 
             {/* Victory Button in Bottom Bar (Mobile focused) */}
             <button
-              onClick={() => setShowScoring(true)}
+              onClick={() => {
+                setScoringInitialOutcome('victory');
+                setShowScoring(true);
+              }}
               className="flex items-center justify-center p-3 md:p-4 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-900/20 hover:bg-amber-400 transition-all active:scale-90 border-b-2 border-amber-700 sm:hover:scale-110"
               title={t('header.end_game')}
             >
@@ -631,6 +773,23 @@ const App: React.FC = () => {
         )
       }
 
+      {/* Setup Dialog */}
+      {showSetup && (
+        <SetupDialog
+          settings={settings}
+          onConfirm={startGame}
+          onCancel={() => setShowSetup(false)}
+        />
+      )}
+
+      {/* Adversary Rules Modal */}
+      {showRules && (
+        <AdversaryRules
+          settings={settings}
+          onClose={() => setShowRules(false)}
+        />
+      )}
+
       {/* Scoring Dialog */}
       {showScoring && (
         <ScoringDialog
@@ -641,6 +800,7 @@ const App: React.FC = () => {
           onClose={() => setShowScoring(false)}
           onSaveGame={handleGameComplete}
           currentRound={round}
+          initialOutcome={scoringInitialOutcome}
         />
       )}
 

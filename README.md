@@ -6,8 +6,15 @@ A modern, responsive web application designed to track games of the board game *
 
 ## Features ✨
 
-- **Multi-language Support:** Fully localized in English and German.
+- **Multi-language Support:** Fully localized in English and German, using official terminology and card text.
+- **Advanced Adversary Logic:** 
+  - Automatic phase injection for complex rules (e.g., **England's High Immigration** phase).
+  - Dynamic rule handling (e.g., High Immigration is removed at appropriate times for Level 3).
+  - **Note:** Currently, full rule logic and level data are verified and implemented only for **Base Game Adversaries** (Prussia, England, Sweden). Other expansion adversaries are placeholders and require playtesting.
 - **Phase Tracking:** Navigate through the game phases (Spirit, Fast Power, Invader, Slow Power, Time) with detailed sub-step guidance.
+- **In-Game Assistance:**
+  - **Active Rules Overview:** View current Level effects, Escalation, and additional Loss Conditions at any time.
+  - **Setup vs. Play:** Clear separation of one-time setup instructions and persistent gameplay effects.
 - **Game Timer:** Built-in timer with pause functionality to track the duration of your sessions.
 - **Round Management:** Easily track the current round and transition between rounds.
 - **Game Setup:**

@@ -40,11 +40,35 @@ export interface Spirit {
   expansionId: ExpansionId;
 }
 
+export interface AdversaryLevel {
+  level: number;
+  difficulty: number;
+  name?: string; // e.g. "Fast Start"
+  effect?: string; // Persistent effect description
+  setupRule?: string; // Instructions for setup
+  isSetup?: boolean; // explicit flag if the effect is a setup instruction
+  invaderDeck?: string; // Deck order e.g. "111-22-333"
+  fearCards?: string; // e.g. "3/3/3"
+}
+
 export interface Adversary {
   id: string;
   name?: string;
-  levels: { level: number; difficulty: number }[];
   expansionId: ExpansionId;
+  levels: AdversaryLevel[];
+  escalation?: {
+    name: string;
+    description: string;
+  };
+  lossCondition?: {
+    name: string;
+    description: string;
+  };
+  phaseHints?: Record<string, { // key is phaseId
+    id?: string; // Localization key suffix
+    level: number; // Min level required
+    hint: string; // Text to show
+  }[]>;
 }
 
 export interface Scenario {

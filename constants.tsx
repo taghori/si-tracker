@@ -79,40 +79,161 @@ export const ADVERSARIES: Adversary[] = [
   {
     id: 'prussia',
     expansionId: ExpansionId.BASE,
+    escalation: {
+      name: "",
+      description: ""
+    },
+    phaseHints: {
+      "invader-explore": [{ id: "escalation", level: 0, hint: "" }]
+    },
     levels: [
       { level: 0, difficulty: 1 },
-      { level: 1, difficulty: 2 },
-      { level: 2, difficulty: 4 },
-      { level: 3, difficulty: 6 },
-      { level: 4, difficulty: 7 },
-      { level: 5, difficulty: 9 },
-      { level: 6, difficulty: 10 },
+      {
+        level: 1, difficulty: 2, name: "", isSetup: true,
+        effect: "",
+        fearCards: "3/3/3"
+      },
+      {
+        level: 2, difficulty: 4, name: "", isSetup: true,
+        effect: "",
+        fearCards: "3/3/3", invaderDeck: "111-3-2222-3333"
+      },
+      {
+        level: 3, difficulty: 6, name: "", isSetup: true,
+        effect: "",
+        fearCards: "3/4/3", invaderDeck: "11-3-2222-3333"
+      },
+      {
+        level: 4, difficulty: 7, name: "", isSetup: true,
+        effect: "",
+        fearCards: "4/4/3", invaderDeck: "11-3-222-3333"
+      },
+      {
+        level: 5, difficulty: 9, name: "", isSetup: true,
+        effect: "",
+        fearCards: "4/4/3", invaderDeck: "1-3-222-3333"
+      },
+      {
+        level: 6, difficulty: 10, name: "", isSetup: true,
+        effect: "",
+        fearCards: "4/4/4", invaderDeck: "3-222-3333"
+      },
     ]
   },
   {
     id: 'england',
+    name: 'Kingdom of England',
     expansionId: ExpansionId.BASE,
+    escalation: {
+      name: "",
+      description: ""
+    },
+    lossCondition: {
+      name: "",
+      description: ""
+    },
+    phaseHints: {
+      "invader-build": [
+        { id: "indentured_servants", level: 1, hint: "" },
+        { id: "high_immigration", level: 3, hint: "" },
+      ],
+      "invader-ravage": [
+        { id: "local_autonomy", level: 5, hint: "" }
+      ],
+      "fast-power": [
+        { id: "local_autonomy", level: 5, hint: "" }
+      ],
+      "slow-power": [
+        { id: "local_autonomy", level: 5, hint: "" }
+      ]
+    },
     levels: [
       { level: 0, difficulty: 1 },
-      { level: 1, difficulty: 3 },
-      { level: 2, difficulty: 4 },
-      { level: 3, difficulty: 6 },
-      { level: 4, difficulty: 7 },
-      { level: 5, difficulty: 9 },
-      { level: 6, difficulty: 11 },
+      {
+        level: 1, difficulty: 3, name: "",
+        effect: "",
+        fearCards: "3/4/3"
+      },
+      {
+        level: 2, difficulty: 4, name: "", isSetup: true,
+        effect: "",
+        fearCards: "4/4/3"
+      },
+      {
+        level: 3, difficulty: 6, name: "",
+        effect: "",
+        fearCards: "4/5/4"
+      },
+      {
+        level: 4, difficulty: 7, name: "",
+        effect: "",
+        fearCards: "4/5/5"
+      },
+      {
+        level: 5, difficulty: 9, name: "",
+        effect: "",
+        fearCards: "4/5/5"
+      },
+      {
+        level: 6, difficulty: 11, name: "",
+        effect: "",
+        setupRule: "",
+        fearCards: "4/5/4"
+      },
     ]
   },
   {
     id: 'sweden',
+    name: 'Kingdom of Sweden',
+    // difficulty: '1-8', // This was not in the original, and not in the instruction to add.
+    // flagImage: 'https://cf.geekdo-images.com/original/img/7g6Y-t4g0QJqY9Q5zJzJzJzJzJz=/fit-in/1200x630/pic3040003.png', // This was not in the original, and not in the instruction to add.
     expansionId: ExpansionId.BASE,
+    escalation: {
+      name: "",
+      description: ""
+    },
+    phaseHints: {
+      "invader-explore": [
+        { id: "escalation", level: 0, hint: "" }
+      ],
+      "invader-ravage": [
+        { id: "heavy_mining", level: 1, hint: "" },
+        { id: "fine_steel", level: 3, hint: "" },
+        { id: "mining_rush", level: 5, hint: "" }
+      ]
+    },
     levels: [
       { level: 0, difficulty: 1 },
-      { level: 1, difficulty: 2 },
-      { level: 2, difficulty: 3 },
-      { level: 3, difficulty: 5 },
-      { level: 4, difficulty: 6 },
-      { level: 5, difficulty: 7 },
-      { level: 6, difficulty: 8 },
+      {
+        level: 1, difficulty: 2, name: "",
+        effect: "",
+        fearCards: "3/3/3"
+      },
+      {
+        level: 2, difficulty: 3, name: "", isSetup: true,
+        effect: "",
+        fearCards: "3/4/3"
+      },
+      {
+        level: 3, difficulty: 5, name: "",
+        effect: "",
+        fearCards: "3/4/3"
+      },
+      {
+        level: 4, difficulty: 6, name: "", isSetup: true,
+        effect: "",
+        fearCards: "3/4/4"
+      },
+      {
+        level: 5, difficulty: 7, name: "",
+        effect: "",
+        fearCards: "4/4/4"
+      },
+      {
+        level: 6, difficulty: 8, name: "", isSetup: true,
+        effect: "",
+        fearCards: "4/4/5"
+      },
     ]
   },
   {

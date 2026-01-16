@@ -11,12 +11,12 @@ interface ScoringDialogProps {
   settings: GameSettings;
   onClose: () => void;
   onSaveGame: (result: GameResult) => void;
-  currentRound: number;
+  initialOutcome?: GameOutcome;
 }
 
 type GameOutcome = 'victory' | 'defeat';
 
-const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame, currentRound }) => {
+const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, elapsedTime, settings, onClose, onSaveGame, currentRound, initialOutcome = 'victory' }) => {
   const { t } = useI18n();
   const [step, setStep] = useState<'input' | 'result'>('input');
 
@@ -36,7 +36,7 @@ const ScoringDialog: React.FC<ScoringDialogProps> = ({ playerCount, spirits, ela
   }, [settings]);
 
   // Scoring State
-  const [outcome, setOutcome] = useState<GameOutcome>('victory');
+  const [outcome, setOutcome] = useState<GameOutcome>(initialOutcome);
   const [difficulty, setDifficulty] = useState<number>(initialDifficulty);
   const [dahan, setDahan] = useState<number>(0);
   const [blight, setBlight] = useState<number>(0);
