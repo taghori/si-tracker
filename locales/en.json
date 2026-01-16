@@ -217,6 +217,7 @@
     "adversary_rules": {
         "title": "Adversary Rule",
         "setup_title": "Game Setup",
+        "common": {},
         "escalation": "Escalation",
         "loss_condition": "Additional Loss Condition",
         "active_levels": "Active Level Effects",

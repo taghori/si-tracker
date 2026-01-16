@@ -63,6 +63,9 @@ const SetupDialog: React.FC<SetupDialogProps> = ({ settings, onConfirm, onCancel
                 rules.push({ level: i, rule: translatedEffect && translatedEffect !== `${keyBase}.effect` ? translatedEffect : lvl.effect });
             }
         }
+
+
+
         return rules;
     };
 

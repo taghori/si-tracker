@@ -217,6 +217,7 @@
     "adversary_rules": {
         "title": "Widersacher-Regel",
         "setup_title": "Spielaufbau",
+        "common": {},
         "escalation": "Eskalation",
         "loss_condition": "Zusätzliche Niederlage-Bedingung",
         "active_levels": "Aktive Stufen-Effekte",

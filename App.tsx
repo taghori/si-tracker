@@ -180,7 +180,14 @@ const App: React.FC = () => {
         }
       }
     }
-    return parseInvaderDeck(deckString);
+    const deck = parseInvaderDeck(deckString);
+
+    // Sweden Level 4+: "Remove the top card of the Invader Deck"
+    if (settings.adversary?.id === 'sweden' && settings.adversary.level >= 4) {
+      deck.shift();
+    }
+
+    return deck;
   }, [settings.adversary]);
 
   const invaderStage = useMemo(() => {
