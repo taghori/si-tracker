@@ -77,7 +77,8 @@ export class GameRulesService {
 
         // 2. Handle England Level 3+ "High Immigration" Injection
         if (settings.adversary?.id === 'england' && settings.adversary.level >= 3) {
-            if (this.shouldShowHighImmigration(round, invaderDeck)) {
+            // Pass the level to the check function
+            if (this.shouldShowHighImmigration(round, invaderDeck, settings.adversary.level)) {
 
                 // Find Ravage index to insert before it
                 const ravageIndex = phases.findIndex(p => p.id === 'invader-ravage');
@@ -107,16 +108,20 @@ export class GameRulesService {
     /**
      * Determines if the High Immigration phase should be active for England.
      * England Level 3: Remove the tile when a Stage II card slides onto it.
-     * Logic: The tile is to the left of Ravage.
-     * Flow: Explore -> Build -> Ravage -> High Imm -> Discard.
-     * A card typically hits High Imm 3 turns after it is Explored (Explore=0, Build=1, Ravage=2, HighImm=3).
-     * So the FIRST Stage II card (Index i) will stop the rule at Round = i + 3.
+     * England Level 4+: The tile remains for the rest of the game.
      */
-    private static shouldShowHighImmigration(round: number, invaderDeck: number[]): boolean {
+    public static shouldShowHighImmigration(round: number, invaderDeck: number[], level: number): boolean {
+        // Level 4+: Stays forever
+        if (level >= 4) return true;
+
+        // Level 3: Remove when Stage II card slides onto it.
+        // Logic: The tile is to the left of Ravage.
+        // Flow: Explore -> Build -> Ravage -> High Imm -> Discard.
+        // A card typically hits High Imm 3 turns after it is Explored (Explore=0, Build=1, Ravage=2, HighImm=3).
+        // So the FIRST Stage II card (Index i) will stop the rule at Round = i + 3.
         const firstStage2Index = invaderDeck.findIndex(c => c === 2);
 
         if (firstStage2Index !== -1) {
-            // Logic from original code: removalRound = firstStage2Index + 3
             const removalRound = firstStage2Index + 3;
             if (round >= removalRound) {
                 return false;

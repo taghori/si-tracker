@@ -2,6 +2,7 @@ import React from 'react';
 import { Phase, GameSettings } from '../types';
 import { getIcon, PHASE_BG_COLORS, ADVERSARIES } from '../constants';
 import { useI18n } from '../services/i18n';
+import { GameRulesService } from '../services/GameRulesService';
 import { AlertTriangle } from 'lucide-react';
 
 interface PhaseCardProps {
@@ -22,6 +23,28 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, round, settings, invaderSt
   const phaseDesc = t(`phases.${phase.id}.desc`) || phase.description;
   const phaseSubsteps = t(`phases.${phase.id}.substeps`) as string[] || phase.substeps;
 
+  // -- Determine if we are Post-Advance (Visual Shift) --
+  // The Invader Cards advance during 'invader-advance'.
+  // So for 'invader-advance', 'slow-power', and 'time-passes', we show the "Next" state.
+  const isPostAdvance = ['invader-advance', 'slow-power', 'time-passes'].includes(phase.id);
+
+  // Calculate Display Indices
+  // Normal: High=-3, Ravage=-2, Build=-1, Explore=0
+  // Post-Advance: Shift Left (Indices +1 relative to slots). 
+  //   - Ravage Slot shows what WAS at -1 (Build). So index is -1.
+  //   - Build Slot shows what WAS at 0 (Explore). So index is 0.
+  //   - Explore Slot is Empty (waiting for next round).
+  //   - High Imm Slot shows what WAS at -2 (Ravage). So index is -2.
+  //   - High Imm Slot in Post-Advance: Should show what WAS at Ravage (-2).
+  //     But wait, normal High Imm is round-3. Post-Advance offset +1 makes it round-2.
+  //     round-2 is the Ravage card. That matches "sliding left".
+  const idxOffset = isPostAdvance ? 1 : 0;
+
+  const ravageIdx = (round - 2) + idxOffset;
+  const buildIdx = (round - 1) + idxOffset;
+  const exploreIdx = (round) + idxOffset;
+  const highImmIdx = (round - 3) + idxOffset;
+
   // -- Adversary Hint Logic --
   const hints: string[] = [];
   if (settings?.adversary?.id) {
@@ -35,6 +58,13 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, round, settings, invaderSt
         const isEscalation = (item.id === 'escalation') || item.hint.includes("Escalation") || item.hint.includes("Eskalation");
         if (isEscalation && invaderStage !== 2) {
           return; // Skip if not stage 2
+        }
+
+        // England High Immigration Check
+        if (settings.adversary?.id === 'england' && (item.id === 'high_immigration' || item.id === 'england-high-immigration')) {
+          if (invaderDeck && !GameRulesService.shouldShowHighImmigration(round, invaderDeck, settings.adversary.level)) {
+            return; // Skip if rule is no longer active
+          }
         }
 
         if (settings.adversary!.level >= item.level) {
@@ -118,36 +148,41 @@ const PhaseCard: React.FC<PhaseCardProps> = ({ phase, round, settings, invaderSt
             </h3>
             <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
               {/* High Immigration (England Only) */}
-              {settings?.adversary?.id === 'england' && (
-                <div className={`flex flex-col items-center p-2 rounded-lg border ${round - 3 >= 0 ? 'bg-amber-50 border-amber-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
-                  <span className="text-[9px] font-bold text-stone-500 uppercase mb-0.5">High Imm.</span>
-                  <span className="font-serif font-bold text-lg text-stone-800 leading-none">
-                    {round - 3 >= 0 ? (invaderDeck[round - 3] === 1 ? 'I' : invaderDeck[round - 3] === 2 ? 'II' : 'III') : '-'}
-                  </span>
-                </div>
-              )}
+              {settings?.adversary?.id === 'england' &&
+                settings.adversary.level >= 3 &&
+                GameRulesService.shouldShowHighImmigration(round, invaderDeck, settings.adversary.level) && (
+                  <div className={`flex flex-col items-center p-2 rounded-lg border ${highImmIdx >= 0 ? 'bg-amber-50 border-amber-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
+                    <span className="text-[9px] font-bold text-stone-500 uppercase mb-0.5">High Imm.</span>
+                    <span className="font-serif font-bold text-lg text-stone-800 leading-none">
+                      {highImmIdx >= 0 ? (invaderDeck[highImmIdx] === 1 ? 'I' : invaderDeck[highImmIdx] === 2 ? 'II' : 'III') : '-'}
+                    </span>
+                  </div>
+                )}
 
               {/* Ravage */}
-              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] ${round - 2 >= 0 ? 'bg-red-50 border-red-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
+              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] ${ravageIdx >= 0 ? 'bg-red-50 border-red-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
                 <span className="text-[9px] font-bold text-stone-500 uppercase mb-0.5">{getIcon('Flame', "w-3 h-3 inline mr-1")}{t('phases.invader-ravage.name').split(' ')[0]}</span>
                 <span className="font-serif font-bold text-lg text-stone-800 leading-none">
-                  {round - 2 >= 0 ? (invaderDeck[round - 2] === 1 ? 'I' : invaderDeck[round - 2] === 2 ? 'II' : 'III') : '-'}
+                  {ravageIdx >= 0 ? (invaderDeck[ravageIdx] === 1 ? 'I' : invaderDeck[ravageIdx] === 2 ? 'II' : 'III') : '-'}
                 </span>
               </div>
 
               {/* Build */}
-              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] ${round - 1 >= 0 ? 'bg-orange-50 border-orange-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
+              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] ${buildIdx >= 0 ? 'bg-orange-50 border-orange-200' : 'bg-stone-50 border-stone-100 opacity-50'}`}>
                 <span className="text-[9px] font-bold text-stone-500 uppercase mb-0.5">{getIcon('Construction', "w-3 h-3 inline mr-1")}{t('phases.invader-build.name').split(' ')[0]}</span>
                 <span className="font-serif font-bold text-lg text-stone-800 leading-none">
-                  {round - 1 >= 0 ? (invaderDeck[round - 1] === 1 ? 'I' : invaderDeck[round - 1] === 2 ? 'II' : 'III') : '-'}
+                  {buildIdx >= 0 ? (invaderDeck[buildIdx] === 1 ? 'I' : invaderDeck[buildIdx] === 2 ? 'II' : 'III') : '-'}
                 </span>
               </div>
 
               {/* Explore */}
-              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] bg-blue-50 border-blue-200`}>
+              <div className={`flex flex-col items-center p-2 rounded-lg border min-w-[60px] bg-blue-50 border-blue-200 transition-opacity ${isPostAdvance ? 'opacity-50' : 'opacity-100'}`}>
                 <span className="text-[9px] font-bold text-stone-500 uppercase mb-0.5">{getIcon('Flag', "w-3 h-3 inline mr-1")}{t('phases.invader-explore.name').split(' ')[0]}</span>
-                <span className={`font-serif font-bold text-lg leading-none ${invaderDeck[round] === undefined ? 'text-red-500' : 'text-stone-800'}`}>
-                  {invaderDeck[round] ? (invaderDeck[round] === 1 ? 'I' : invaderDeck[round] === 2 ? 'II' : 'III') : (invaderDeck[round] === undefined ? '∅' : '-')}
+                {/* 
+                   Logic Update: Always show the card at exploreIdx, even if Post-Advance. 
+                */}
+                <span className={`font-serif font-bold text-lg leading-none ${invaderDeck[exploreIdx] === undefined ? 'text-red-500' : 'text-stone-800'}`}>
+                  {invaderDeck[exploreIdx] ? (invaderDeck[exploreIdx] === 1 ? 'I' : invaderDeck[exploreIdx] === 2 ? 'II' : 'III') : (invaderDeck[exploreIdx] === undefined ? '∅' : '-')}
                 </span>
               </div>
             </div>
