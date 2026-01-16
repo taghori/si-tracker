@@ -230,6 +230,237 @@
         "no_setup_changes": "Keine zusätzlichen Aufbau-Anweisungen für diese Stufe."
     },
     "adversary_data": {
+        "habsburg-mining": {
+            "name": "Habsburg Bergbau-Expedition",
+            "loss_condition": {
+                "name": "Land kahlgeschlagen",
+                "description": "Am Ende der Schnellen Phase gewinnen die Invasoren, wenn in einem Gebiet mindestens 8 Invasoren/Ödnis (zusammen) liegen."
+            },
+            "escalation": {
+                "name": "Bergbau-Tunnel",
+                "description": "Nach Invasorenkarten vorrücken: Auf jedem Spielplan, Entdecken in 2 Gebieten, deren Terrain nicht der Wüten- oder Bauen-Karte entspricht (keine Quelle erforderlich)."
+            },
+            "levels": {
+                "1": {
+                    "name": "Belohnte Habgier / Unablässiger Bergbau",
+                    "effect": "Gebiete mit 3+ Invasoren sind Bergbau-Gebiete. In Bergbau-Gebieten: Bau-Karten verursachen Wüten-Aktionen. Seuche beeinflusst Wüten wie Bauen. Ödnis-Kaskade? Upgrade 1 Invasor stattdessen (vor Dahan-Gegenangriff)."
+                },
+                "2": {
+                    "name": "Bergarbeiter kommen von weit her",
+                    "effect": "Aufbau: Füge 1 Entdecker in jedes Gebiet ohne Dahan hinzu. Füge 1 Seuche und 1 Stadt in das höchstnummerierte Gebiet mit einem Dorf-Aufbausymbol hinzu.",
+                    "setup_rule": "Füge 1 Entdecker in jedes Gebiet ohne Dahan hinzu. Füge 1 Seuche und 1 Stadt in das höchstnummerierte Gebiet mit einem Dorf-Aufbausymbol hinzu."
+                },
+                "3": {
+                    "name": "Bergbau-Boom (I)",
+                    "effect": "Nach dem Bauen-Schritt, auf jedem Spielplan: Wähle ein Gebiet mit Entdecker. Upgrade 1 Entdecker dort."
+                },
+                "4": {
+                    "name": "Unerschlossene Salzvorkommen",
+                    "effect": "Aufbau: Entferne 'Küstengebiete' Stufe II Karte. Platziere 'Salzvorkommen' als 2. Stufe II Karte. (Reihenfolge: 111-2S22-33333).",
+                    "setup_rule": "Entferne 'Küstengebiete'. Platziere 'Salzvorkommen' als 2. Stufe II Karte."
+                },
+                "5": {
+                    "name": "Bergbau-Boom (II)",
+                    "effect": "Statt Bergbau-Boom (I), nach dem Bauen-Schritt, auf jedem Spielplan: Wähle ein Gebiet mit Entdecker. Baue dort, dann Upgrade 1 Entdecker. (Baue normal in einem Bergbau-Gebiet.)"
+                },
+                "6": {
+                    "name": "Das aufsteigende Reich",
+                    "effect": "Während Entdecken: Auf Spielplänen mit 3 oder weniger Ödnis: Füge +1 Entdecker in jedem erfolgreich entdeckten Gebiet hinzu. (Max. 2 Gebiete pro Spielplan pro Entdecken-Karte.)"
+                }
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Entdecken in 2 nicht übereinstimmenden Gebieten (keine Quelle).",
+                "land_stripped": "Niederlage-Check: 8+ Invasoren/Ödnis in einem Gebiet -> Niederlage.",
+                "ceaseless_mining": "3+ Invasoren = Bergbau-Gebiet. Bauen -> Wüten. Seuche wirkt auf Wüten.",
+                "avarice": "Ödnis-Kaskade? Upgrade Invasor stattdessen.",
+                "mining_boom_1": "Nach Bauen: Upgrade 1 Entdecker.",
+                "mining_boom_2": "Nach Bauen: Baue dann Upgrade 1 Entdecker.",
+                "empire_ascendant": "Spielplan <=3 Ödnis: +1 Entdecker pro Entdecken."
+            }
+        },
+        "scotland": {
+            "name": "Königreich Schottland",
+            "loss_condition": {
+                "name": "Handels-Drehscheibe",
+                "description": "Wenn die Anzahl an Küstengebieten mit Stadt jemals größer ist als (2 x Anzahl der Spielpläne), gewinnen die Invasoren."
+            },
+            "escalation": {
+                "name": "Häfen wuchern auswärts",
+                "description": "Auf dem einen Spielplan mit den meisten Küsten-Dörfern/Städten, füge 1 Dorf zu den N Gebieten mit den wenigsten Dörfern hinzu (N = Anzahl der Spieler)."
+            },
+            "levels": {
+                "1": {
+                    "name": "Handelshafen",
+                    "effect": "Nach dem Aufbau, in Küstengebieten: Entdecken-Karten fügen 1 Dorf statt 1 Entdecker hinzu. 'Küstengebiete' Invasorenkarten tun dies für maximal 2 Gebiete pro Spielplan."
+                },
+                "2": {
+                    "name": "Gelegenheit ergreifen",
+                    "effect": "Während Aufbau: Füge 1 Stadt zu Gebiet #2 hinzu. Platziere 'Küstengebiete' als 3. Stufe II Karte, und schiebe die zwei Stufe II Karten darüber eins nach oben.",
+                    "setup_rule": "Platziere 'Küstengebiete' als 3. Stufe II Karte, und schiebe die zwei Stufe II Karten darüber eins nach oben. (Neue Deck-Reihenfolge: 11-22-1-C2-33333)"
+                },
+                "3": {
+                    "name": "Die Küste kartieren",
+                    "effect": "In Küstengebieten: Bauen-Karten betreffen Gebiete ohne Invasoren, solange es eine benachbarte Stadt gibt."
+                },
+                "4": {
+                    "name": "Ambition einer kleinen Nation",
+                    "effect": "Während Aufbau: Ersetze die unterste Stufe I Karte durch die unterste Stufe III Karte. (Neue Deck-Reihenfolge: 11-22-3-C2-3333)"
+                },
+                "5": {
+                    "name": "Abwässer und Bilgenwasser",
+                    "effect": "Nachdem eine Wüten-Aktion Ödnis zu einem Küstengebiet hinzufügt, füge 1 Ödnis zum Ozean dieses Spielplans hinzu (ohne Kaskade). Behandle den Ozean als Küsten-Feuchtgebiet für diese Regel und für Ödnis entfernen/bewegen."
+                },
+                "6": {
+                    "name": "Exporte treiben Wachstum im Landesinneren an",
+                    "effect": "Nach dem Wüten-Schritt, füge 1 Dorf zu jedem Binnenland-Gebiet hinzu, das der Wüten-Karte entspricht und innerhalb von 1 Reichweite zu Dorf/Stadt ist."
+                }
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Meiste Küsten-Dörfer/Städte? Füge 1 Dorf zu N Gebieten mit wenigsten Dörfern hinzu.",
+                "trading_port": "Küsten-Entdecken? Füge 1 Dorf stattdessen hinzu (max 2/Spielplan).",
+                "chart_coastline": "Küsten-Bauen betrifft leere Gebiete falls benachbarte Stadt.",
+                "runoff": "Wüten fügt Ödnis zu Küste? Füge 1 Ödnis zum Ozean hinzu.",
+                "exports": "Nach Wüten: +1 Dorf zu passendem Binnenland nahe Dorf/Stadt."
+            }
+        },
+        "russia": {
+            "name": "Zarenreich Russland",
+            "loss_condition": {
+                "name": "Jäger überfluten die Insel",
+                "description": "Lege durch Regeln des Gegners zerstörte Wildnis auf dieses Feld. Wenn jemals mehr Wildnis auf diesem Feld liegt als auf der Insel, gewinnen die Invasoren."
+            },
+            "escalation": {
+                "name": "Den Raubtieren nachstellen",
+                "description": "Auf jedem Spielplan: Füge 2 Entdecker (insgesamt) zu Gebieten mit Wildnis hinzu. Falls nicht möglich, füge stattdessen 2 Entdecker zu Gebieten mit Wildnis auf einem anderen Spielplan hinzu."
+            },
+            "levels": {
+                "1": {
+                    "name": "Jäger bringen Panzer und Häute heim",
+                    "effect": "Während des Spiels: Entdecker verursachen +1 Schaden. Wenn Wüten Ödnis zu einem Gebiet hinzufügt (inkl. Kaskaden), zerstöre 1 Wildnis in diesem Gebiet.",
+                    "setup_rule": "Während Aufbau: Auf jedem Spielplan, füge 1 Wildnis und 1 Entdecker zum höchstnummerierten Gebiet ohne Stadt/Dorf hinzu."
+                },
+                "2": {
+                    "name": "Gespür für drohendes Unheil",
+                    "effect": "Das erste Mal wenn eine Aktion Entdecker zerstören würde: Wenn möglich, wird 1 dieser Entdecker stattdessen verschoben; 1 Furcht wenn du dies tust."
+                },
+                "3": {
+                    "name": "Wettstreit unter den Jägern",
+                    "effect": "Wüten-Karten passen auch zu Gebieten mit 3 oder mehr Entdeckern. (Wenn das Gebiet bereits zur Wüten-Karte passte, wütet es trotzdem nur einmal.)"
+                },
+                "4": {
+                    "name": "Beschleunigte Ausbeutung",
+                    "effect": "Beim Erstellen des Invasoren-Decks, lege 1 Stufe III Karte nach jeder Stufe II Karte. (Neue Deck-Reihenfolge: 111-2-3-2-3-2-3-2-33)"
+                },
+                "5": {
+                    "name": "Verschanzen angesichts der Furcht",
+                    "effect": "Wenn eine (unbenutzte Invasorenkarte) unter Furchtkarten aufgedeckt wird, lege sie sofort auf das Bauen-Feld (offen).",
+                    "setup_rule": "Lege eine unbenutzte Stufe II Invasorenkarte unter die obersten 3 Furchtkarten, und eine unbenutzte Stufe III Karte unter die obersten 7 Furchtkarten."
+                },
+                "6": {
+                    "name": "Druck für schnellen Profit",
+                    "effect": "Nach dem Wüten-Schritt von Runde 2+, auf jedem Spielplan wo keine Ödnis hinzugefügt wurde: In dem Gebiet mit den meisten Entdeckern (min. 1), füge 1 Entdecker und 1 Dorf hinzu."
+                }
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Füge 2 Entdecker zu Gebieten mit Wildnis hinzu.",
+                "hunters_shell": "Wüten fügt Ödnis hinzu? Zerstöre 1 Wildnis dort.",
+                "competition": "Gebiete mit 3+ Entdeckern wüten ebenfalls.",
+                "pressure_profit": "Nach Wüten (Runde 2+): Kein Ödnis hinzugefügt? +1 Entdecker +1 Dorf zu Land mit meisten Entdeckern.",
+                "impending_disaster": "Erstes Mal Aktion zerstört Entdecker: Verschiebe 1 stattdessen (1 Furcht)."
+            }
+        },
+        "habsburg": {
+            "name": "Habsburgermonarchie (Viehzucht-Kolonie)",
+            "loss_condition": {
+                "name": "Irreparabler Schaden",
+                "description": "Verfolge, wie viel Ödnis während Wüten-Aktionen, die 8+ Schaden verursachen, von der Ödnis-Karte genommen wird. Übersteigt diese Anzahl jemals die Spielerzahl, gewinnen die Invasoren."
+            },
+            "escalation": {
+                "name": "Suche nach erstklassigem Territorium",
+                "description": "Nach dem Entdecken: Auf jedem Spielplan mit 4 oder weniger Ödnis, füge 1 Dorf zu einem Gebiet ohne Dorf/Ödnis hinzu. Auf jedem Spielplan mit 2 oder weniger Ödnis, tue dies erneut."
+            },
+            "levels": {
+                "1": {
+                    "name": "Wandernde Hirten",
+                    "effect": "Nach dem normalen Bauen: Versammle in jedem Gebiet, das der Bau-Karte entspricht, 1 Dorf aus einem Gebiet, das nicht der Bau-Karte entspricht. (In Spielplan-/Gebietsreihenfolge.)"
+                },
+                "2": {
+                    "name": "Eher ländlich als städtisch",
+                    "effect": "Während des Spiels: Wenn Invasoren 1 Stadt im Binnenland bauen würden, bauen sie stattdessen 2 Dörfer.",
+                    "setup_rule": "Während des Aufbaus: Füge auf jedem Spielplan 1 Dorf zu Gebiet #2 und 1 Dorf zum höchstnummerierten Gebiet ohne Aufbau-Symbole hinzu."
+                },
+                "3": {
+                    "name": "Schnelle Ausbreitung",
+                    "effect": "Beim Erstellen des Invasoren-Decks: Entferne 1 zusätzliche Stufe I Karte. (Neue Deck-Reihenfolge: 11-2222-33333)"
+                },
+                "4": {
+                    "name": "Herden gedeihen in grünem Land",
+                    "effect": "Dörfer in Gebieten ohne Ödnis sind Widerstandsfähig (+2 Leben). 'Zerstöre Dorf'-Effekte verursachen stattdessen 2 Schaden (nur an diesen Dörfern) pro Dorf, das sie zerstören könnten."
+                },
+                "5": {
+                    "name": "Einwanderungswelle",
+                    "effect": "Wenn aufgedeckt (Erinnerungskarte): Füge auf jedem Spielplan 1 Stadt zu einem Küstengebiet ohne Stadt und 1 Dorf zu den 3 Binnenland-Gebieten mit der wenigsten Ödnis hinzu.",
+                    "setup_rule": "Lege vor dem ersten Entdecken die Habsburger-Erinnerungskarte unter die obersten 5 Invasorenkarten."
+                },
+                "6": {
+                    "name": "Weit verstreute Herden",
+                    "effect": "Wüten verursacht +2 Schaden (insgesamt), wenn in benachbarten Gebieten Dörfer sind. (Dies lässt Gebiete ohne Invasoren nicht wüten.)"
+                }
+            },
+            "phaseHints": {
+                "escalation": "Eskalation: Spielplan <4 Ödnis? +1 Dorf (kein Dorf/Ödnis). <2 Ödnis? Wiederhole es.",
+                "migratory_herders": "Nach Bauen: Versammle 1 Dorf von nicht-passendem Gebiet in passendes Gebiet.",
+                "rural_provinces": "Bauen Stadt im Binnenland -> Baue stattdessen 2 Dörfer.",
+                "irreparable_damage": "Niederlage: Wüten 8+ Schaden? Zähle entfernte Ödnis. > Spieler = Niederlage.",
+                "far_flung_herds": "Wüten +2 Schaden wenn benachbartes Gebiet Dorf hat."
+            }
+        },
+        "france": {
+            "name": "Königreich Frankreich (Plantagen-Kolonie)",
+            "loss_condition": {
+                "name": "Ausufernde Plantagen",
+                "description": "Vor dem Aufbau: Alle bis auf 7 Dörfer pro Spieler in die Schachtel zurücklegen. Die Invasoren gewinnen, wenn du kein Dorf mehr platzieren kannst."
+            },
+            "escalation": {
+                "name": "Bedarf an neuen Anbauflächen",
+                "description": "Nach dem Entdecken: Wähle auf jedem Spielplan ein Gebiet des gezeigten Typs. Wenn es ein Dorf/Stadt hat: Füge 1 Ödnis hinzu. Sonst: Füge 1 Dorf hinzu."
+            },
+            "levels": {
+                "1": {
+                    "name": "Grenzland-Entdecker",
+                    "effect": "Außer im Aufbau: Wenn Invasoren erfolgreich in ein Gebiet ohne Dorf/Stadt entdecken, füge dort 1 Entdecker hinzu."
+                },
+                "2": {
+                    "name": "Sklavenarbeit",
+                    "effect": "Nach dem Bauen in einem Gebiet mit 2+ Entdeckern: Ersetze alle bis auf 1 Entdecker durch die gleiche Anzahl Dörfer.",
+                    "setup_rule": "Lege das 'Sklavenaufstand'-Ereignis unter die obersten 3 Karten des Ereignis-Stapels."
+                },
+                "3": {
+                    "name": "Frühe Plantagen",
+                    "setup_rule": "Füge auf jedem Spielplan 1 Dorf zum höchstnummerierten Gebiet ohne Dorf hinzu. Füge 1 Dorf zu Gebiet #1 hinzu."
+                },
+                "4": {
+                    "name": "Dreieckshandel",
+                    "effect": "Wann immer Invasoren eine Küsten-Stadt bauen, füge 1 Dorf zum benachbarten Gebiet mit den wenigsten Dörfern hinzu."
+                },
+                "5": {
+                    "name": "Langsam heilendes Ökosystem",
+                    "effect": "Wenn du Ödnis entfernst, lege sie hierher statt auf die Ödnis-Karte. Sobald hier 3 Ödnis pro Spieler liegen, bewege alles zurück auf die Ödnis-Karte."
+                },
+                "6": {
+                    "name": "Hartnäckige Entdecker",
+                    "effect": "Nach einer Entdecken-Karte: Füge auf jedem Spielplan 1 Entdecker zu einem Gebiet ohne Entdecker hinzu. Furcht-Effekte entfernen niemals Entdecker (stattdessen darfst du sie verschieben)."
+                }
+            },
+            "phaseHints": {
+                "frontier_explorers": "Entdecken in leerem Gebiet (kein Dorf/Stadt)? Füge +1 Entdecker hinzu.",
+                "slave_labor": "Bauen mit 2+ Entdeckern? Ersetze alle bis auf 1 durch Dörfer.",
+                "triangle_trade": "Küsten-Stadt gebaut? +1 Dorf im benachbarten Gebiet (wenigste Dörfer).",
+                "persistent_explorers": "Nach Entdecken-Karte: +1 Entdecker in Gebiet ohne Entdecker. Furcht entfernt keine Entdecker.",
+                "slow_healing": "Ödnis entfernt? Lege sie hierher (max 3/Spieler). Lege zurück wenn voll.",
+                "escalation": "Eskalation: Wähle Gebiet. Dorf/Stadt -> Ödnis, sonst -> Dorf."
+            }
+        },
         "prussia": {
             "escalation": {
                 "name": "Landnahme",

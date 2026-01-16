@@ -10,7 +10,12 @@ A modern, responsive web application designed to track games of the board game *
 - **Advanced Adversary Logic:** 
   - Automatic phase injection for complex rules (e.g., **England's High Immigration** phase).
   - Dynamic rule handling (e.g., High Immigration is removed at appropriate times for Level 3).
-  - **Note:** Currently, full rule logic and level data are verified and implemented only for **Base Game Adversaries** (Prussia, England, Sweden). Other expansion adversaries are placeholders and require playtesting.
+  - **Note:** Full rule logic, level data, and phase hints are implemented for the following adversaries:
+    - **Base Game:** Kingdom of Brandenburg-Prussia, Kingdom of England, Kingdom of Sweden.
+    - **Branch & Claw:** Kingdom of France.
+    - **Jagged Earth:** Habsburg Monarchy (Livestock Colony), Tsardom of Russia.
+    - **Promo Pack 2:** Kingdom of Scotland.
+    - **Nature Incarnate:** Habsburg Mining Expedition.
 - **Phase Tracking:** Navigate through the game phases (Spirit, Fast Power, Invader, Slow Power, Time) with detailed sub-step guidance.
 - **In-Game Assistance:**
   - **Active Rules Overview:** View current Level effects, Escalation, and additional Loss Conditions at any time.
