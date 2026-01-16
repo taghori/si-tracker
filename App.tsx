@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useI18n } from './services/i18n';
-import { GAME_PHASES } from './constants';
-import { GameSettings, ExpansionId, GameResult, PhaseCategory } from './types';
+import { useGame } from './hooks/useGame';
 import PhaseCard from './components/PhaseCard';
 import PhaseTimeline from './components/PhaseTimeline';
-import { parseInvaderDeck } from './utils/invaderDeck';
-import { ADVERSARIES } from './constants';
 
 import SettingsDialog from './components/SettingsDialog';
 import ScoringDialog from './components/ScoringDialog';
 import GameDetailDialog from './components/GameDetailDialog';
-import { ChevronRight, ChevronLeft, RotateCcw, Settings, Play, Pause, Clock, Flag, Trophy, Skull, Trash2, Map, Flower2, Download, Upload } from 'lucide-react';
+import SetupDialog from './components/SetupDialog';
+import AdversaryRules from './components/AdversaryRules';
+
+import { ChevronRight, ChevronLeft, RotateCcw, Settings, Play, Pause, Clock, Trophy, Skull, Trash2, Map, Flower2, Download, Upload, BookOpen } from 'lucide-react';
 
 const formatTime = (totalSeconds: number) => {
   const hours = Math.floor(totalSeconds / 3600);
@@ -25,200 +25,36 @@ const formatTime = (totalSeconds: number) => {
   return `${pad(minutes)}:${pad(seconds)}`;
 };
 
-import SetupDialog from './components/SetupDialog';
-import AdversaryRules from './components/AdversaryRules';
-import { ShieldAlert, BookOpen } from 'lucide-react';
-
 const App: React.FC = () => {
   const { t, language, setLanguage } = useI18n();
+  const { state, actions } = useGame();
 
+  // -- Local UI State (Swipe) --
+  const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number, y: number } | null>(null);
+  const minSwipeDistance = 60;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // -- Destructure State for easier access --
+  const {
+    hasStarted, isPaused, elapsedSeconds, round, phaseIndex, activePhases,
+    invaderDeck, invaderStage, settings, history, selectedGame,
+    dialogs
+  } = state;
+
+  const {
+    showSettings, showScoring, showSetup, showRules, scoringInitialOutcome
+  } = dialogs;
+
+
+  // -- Formatting Helpers --
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(language === 'de' ? 'de-DE' : 'en-US', {
       day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
     });
   };
 
-  // Game State
-  const [hasStarted, setHasStarted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-
-  // Progression State
-  const [round, setRound] = useState(1);
-  const [phaseIndex, setPhaseIndex] = useState(0);
-  const [showSettings, setShowSettings] = useState(false); // Changed default to false
-  const [showScoring, setShowScoring] = useState(false);
-  const [showSetup, setShowSetup] = useState(false);
-  const [showRules, setShowRules] = useState(false);
-  const [scoringInitialOutcome, setScoringInitialOutcome] = useState<'victory' | 'defeat'>('victory');
-
-  // Data State
-  const [settings, setSettings] = useState<GameSettings>({
-    playerCount: 1,
-    expansions: [ExpansionId.BASE],
-    selectedSpirits: []
-  });
-
-  const [selectedGame, setSelectedGame] = useState<GameResult | null>(null);
-
-  // History State
-  const [history, setHistory] = useState<GameResult[]>([]);
-
-  // Load History
-  useEffect(() => {
-    const saved = localStorage.getItem('spirit-island-history');
-    if (saved) {
-      try {
-        setHistory(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse history", e);
-      }
-    }
-  }, []);
-
-  // Timer Logic
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-
-    if (hasStarted && !isPaused && !showScoring) {
-      interval = setInterval(() => {
-        setElapsedSeconds(prev => prev + 1);
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [hasStarted, isPaused, showScoring]);
-
-  // Helper to filter phases based on round and settings
-  const getPhasesForRound = (r: number) => {
-    let phases = GAME_PHASES.filter(phase => {
-      if (phase.requiresEvents) {
-        // Skip Event phase on Round 1
-        if (r === 1) return false;
-
-        return settings.expansions.includes(ExpansionId.BRANCH_AND_CLAW) ||
-          settings.expansions.includes(ExpansionId.JAGGED_EARTH);
-      }
-      return true;
-    });
-
-    // Check for England Level 3+ "High Immigration" Injection
-    if (settings.adversary?.id === 'england' && settings.adversary.level >= 3) {
-      // Determine if the phase should be active
-      let isHighImmigrationActive = true;
-
-      // Level 3 specific rule: Remove when Stage II card hits it.
-      if (settings.adversary.level === 3) {
-        // Calculate Deck to find first Stage II card
-        let deckString = "111-2222-33333";
-        const adv = ADVERSARIES.find(a => a.id === 'england'); // We know it's England
-        // Check for specific deck overrides (England usually doesn't, but for robustness)
-        for (let l = settings.adversary.level; l >= 0; l--) {
-          const lvlData = adv?.levels.find(lvl => lvl.level === l);
-          if (lvlData?.invaderDeck) {
-            deckString = lvlData.invaderDeck;
-            break;
-          }
-        }
-        const deck = parseInvaderDeck(deckString);
-        const firstStage2Index = deck.findIndex(c => c === 2);
-
-        if (firstStage2Index !== -1) {
-          // Card moves with Initial Explore rule:
-          // Setup: Explore Card #1 (Index 0).
-          // Round 1: Build Card #1 (Index 0). Explore Card #2 (Index 1).
-          // Round 2: Ravage Card #1. Build Card #2. Explore Card #3.
-          // Round 3: High Imm Card #1. Ravage Card #2...
-          // Formula: Card (Index i) hits High Imm at Round = i + 3.
-          // Example: Card #4 (Index 3, first Stage II) hits High Imm at Round 3 + 3 = 6.
-          const removalRound = firstStage2Index + 3;
-          if (r >= removalRound) {
-            isHighImmigrationActive = false;
-          }
-        }
-      }
-
-      if (isHighImmigrationActive) {
-        // High Immigration happens before Ravage (usually Phase Index 5 in standard array)
-        // Find Ravage index
-        const ravageIndex = phases.findIndex(p => p.id === 'invader-ravage');
-        if (ravageIndex !== -1) {
-          const highImmigrationPhase = {
-            id: 'england-high-immigration',
-            name: t('phases.england-high-immigration.name'),
-            // We reuse 'invader-build' category for color/style, or add a custom one if we defined colors.
-            // Let's use 'invader-build' to make it look like a build phase.
-            category: PhaseCategory.INVADER,
-            description: t('phases.england-high-immigration.desc'),
-            iconName: 'Hammer', // Assuming Hammer icon exists or is mapped
-            color: 'text-amber-600',
-            substeps: ["Build in High Immigration land"]
-          };
-          // Insert before Ravage
-          const newPhases = [...phases];
-          newPhases.splice(ravageIndex, 0, highImmigrationPhase);
-          phases = newPhases;
-        }
-      }
-    }
-
-    return phases;
-  };
-
-  // Determine Current Invader Deck and Stage
-  const invaderDeckArray = useMemo(() => {
-    let deckString = "111-2222-33333"; // Standard default
-    if (settings.adversary?.id) {
-      const adv = ADVERSARIES.find(a => a.id === settings.adversary!.id);
-      if (adv) {
-        for (let l = settings.adversary.level; l >= 0; l--) {
-          const lvlData = adv.levels.find(lvl => lvl.level === l);
-          if (lvlData?.invaderDeck) {
-            deckString = lvlData.invaderDeck;
-            break;
-          }
-        }
-      }
-    }
-    const deck = parseInvaderDeck(deckString);
-
-    // Sweden Level 4+: "Remove the top card of the Invader Deck"
-    if (settings.adversary?.id === 'sweden' && settings.adversary.level >= 4) {
-      deck.shift();
-    }
-
-    return deck;
-  }, [settings.adversary]);
-
-  const invaderStage = useMemo(() => {
-    const cardIndex = round;
-    // Return undefined if out of bounds (deck empty), otherwise the stage.
-    // If we want "infinite level 3" for sandbox play, we need a toggle.
-    // But per rules: Empty deck = Loss.
-    return invaderDeckArray[cardIndex];
-  }, [invaderDeckArray, round]);
-
-  // Check for Defeat Condition: Empty Invader Deck during Explore
-  useEffect(() => {
-    const currentPhase = getPhasesForRound(round)[phaseIndex];
-    if (hasStarted && !showScoring && currentPhase?.id === 'invader-explore' && invaderStage === undefined) {
-      // Auto-trigger scoring for Defeat (Silent transition)
-      setScoringInitialOutcome('defeat');
-      setShowScoring(true);
-    }
-  }, [round, phaseIndex, invaderStage, hasStarted, showScoring]);
-
-
-  // Filter phases based on active expansions and round
-  const activePhases = useMemo(() => {
-    return getPhasesForRound(round);
-  }, [settings.expansions, round]);
-
-  // Swipe Logic
-  const [touchStart, setTouchStart] = useState<{ x: number, y: number } | null>(null);
-  const [touchEnd, setTouchEnd] = useState<{ x: number, y: number } | null>(null);
-  const minSwipeDistance = 60;
-
+  // -- Swipe Handlers --
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart({
@@ -239,103 +75,20 @@ const App: React.FC = () => {
     const distanceX = touchStart.x - touchEnd.x;
     const distanceY = touchStart.y - touchEnd.y;
 
-    // Only trigger if horizontal movement is dominant and meets threshold
     if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > minSwipeDistance) {
       if (distanceX > 0) {
-        handleNext();
+        actions.handleNext();
       } else {
-        handlePrev();
+        actions.handlePrev();
       }
     }
   };
 
-  const currentPhase = activePhases[phaseIndex] || activePhases[0];
 
-  const handleNext = () => {
-    if (phaseIndex >= activePhases.length - 1) {
-      setPhaseIndex(0);
-      setRound(r => r + 1);
-    } else {
-      setPhaseIndex(prev => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (phaseIndex <= 0) {
-      if (round > 1) {
-        const prevRound = round - 1;
-        const prevPhases = getPhasesForRound(prevRound);
-        setRound(prevRound);
-        setPhaseIndex(prevPhases.length - 1);
-      }
-    } else {
-      setPhaseIndex(prev => prev - 1);
-    }
-  };
-
-  const handleReset = () => {
-    if (window.confirm(t('common.confirm_reset'))) {
-      fullReset();
-    }
-  };
-
-  const fullReset = () => {
-    setHasStarted(false);
-    setElapsedSeconds(0);
-    setRound(1);
-    setPhaseIndex(0);
-    setIsPaused(false);
-    setShowSettings(false);
-    setShowScoring(false);
-  };
-
-  const handleSaveSettings = (newSettings: GameSettings) => {
-    setSettings(newSettings);
-    setShowSettings(false);
-
-    // If it was the initial setup...
-    if (!hasStarted) {
-      // Check if we need to show Setup Dialog (only if Adversary is active)
-      if (newSettings.adversary && newSettings.adversary.id) {
-        setShowSetup(true);
-      } else {
-        // Start immediately if no adversary
-        startGame();
-      }
-    }
-  };
-
-  const startGame = () => {
-    setHasStarted(true);
-    setPhaseIndex(0);
-    setRound(1);
-    setShowSetup(false);
-  };
-
-  const handleGameComplete = (result: GameResult) => {
-    const newHistory = [result, ...history];
-    setHistory(newHistory);
-    localStorage.setItem('spirit-island-history', JSON.stringify(newHistory));
-    fullReset();
-  };
-
-  const deleteHistoryItem = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (window.confirm(t('common.confirm_delete'))) {
-      const newHistory = history.filter(h => h.id !== id);
-      setHistory(newHistory);
-      localStorage.setItem('spirit-island-history', JSON.stringify(newHistory));
-    }
-  };
-
-  const togglePause = () => {
-    setIsPaused(prev => !prev);
-  };
-
+  // -- History Import/Export --
   const exportHistory = () => {
     const dataStr = JSON.stringify(history, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
     const exportFileDefaultName = `spirit-island-history-${new Date().toISOString().split('T')[0]}.json`;
 
     const linkElement = document.createElement('a');
@@ -343,8 +96,6 @@ const App: React.FC = () => {
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
   };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -362,14 +113,8 @@ const App: React.FC = () => {
 
         if (Array.isArray(importedData)) {
           if (window.confirm(t('history.import_found', { count: importedData.length }))) {
-            // merge logic - filter out duplicates by id if they exist
-            const existingIds = new Set(history.map(h => h.id));
-            const newItems = importedData.filter(item => item && item.id && !existingIds.has(item.id));
-            const mergedHistory = [...newItems, ...history];
-
-            setHistory(mergedHistory);
-            localStorage.setItem('spirit-island-history', JSON.stringify(mergedHistory));
-            alert(t('history.import_success', { count: newItems.length }));
+            const count = actions.mergeHistory(importedData);
+            alert(t('history.import_success', { count }));
           }
         } else {
           alert(t('history.import_error_format'));
@@ -382,6 +127,9 @@ const App: React.FC = () => {
     reader.readAsText(file);
     event.target.value = '';
   };
+
+
+  const currentPhase = activePhases[phaseIndex] || activePhases[0];
 
   return (
     <div className="min-h-screen bg-parchment-100 text-stone-800 font-sans selection:bg-teal-200 flex flex-col relative">
@@ -426,7 +174,7 @@ const App: React.FC = () => {
                 {formatTime(elapsedSeconds)}
               </span>
               <button
-                onClick={togglePause}
+                onClick={actions.togglePause}
                 className="ml-0.5 p-1 rounded-full hover:bg-stone-200 text-stone-500 transition-colors"
                 title={isPaused ? t('header.timer_resume') : t('header.timer_pause')}
                 disabled={showScoring}
@@ -447,7 +195,7 @@ const App: React.FC = () => {
 
             {hasStarted && settings.adversary && (
               <button
-                onClick={() => setShowRules(true)}
+                onClick={() => actions.setShowRules(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 transition-colors border border-amber-200"
                 title={t('header.rules')}
               >
@@ -460,8 +208,8 @@ const App: React.FC = () => {
               {hasStarted && (
                 <button
                   onClick={() => {
-                    setScoringInitialOutcome('victory');
-                    setShowScoring(true);
+                    actions.setScoringInitialOutcome('victory');
+                    actions.setShowScoring(true);
                   }}
                   className="ml-2 pr-4 pl-3 py-1.5 md:py-2 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200 transition-all active:scale-95 flex items-center gap-2 shadow-sm"
                   title={t('header.end_game')}
@@ -474,7 +222,7 @@ const App: React.FC = () => {
               )}
               {hasStarted && (
                 <button
-                  onClick={() => setShowSettings(true)}
+                  onClick={() => actions.setShowSettings(true)}
                   className="p-1.5 md:p-2 text-stone-600 hover:text-amber-600 hover:bg-amber-50 transition-colors rounded-lg"
                   title={t('header.settings')}
                 >
@@ -483,7 +231,7 @@ const App: React.FC = () => {
               )}
               {hasStarted && (
                 <button
-                  onClick={handleReset}
+                  onClick={actions.handleReset}
                   className="p-1.5 md:p-2 text-stone-600 hover:text-red-500 hover:bg-red-50 transition-colors rounded-lg"
                   title={t('header.reset')}
                 >
@@ -510,7 +258,7 @@ const App: React.FC = () => {
                 {formatTime(elapsedSeconds)}
               </span>
               <button
-                onClick={togglePause}
+                onClick={actions.togglePause}
                 className="p-1 rounded-full text-stone-500"
                 disabled={showScoring}
               >
@@ -534,7 +282,7 @@ const App: React.FC = () => {
             <PhaseTimeline
               phases={activePhases}
               currentIndex={phaseIndex}
-              onSelect={(idx) => !isPaused && setPhaseIndex(idx)}
+              onSelect={(idx) => !isPaused && actions.setPhaseIndex(idx)}
             />
           </div>
 
@@ -546,7 +294,7 @@ const App: React.FC = () => {
                 round={round}
                 settings={settings}
                 invaderStage={invaderStage}
-                invaderDeck={invaderDeckArray}
+                invaderDeck={invaderDeck}
               />
             </div>
           </main>
@@ -554,7 +302,7 @@ const App: React.FC = () => {
           {/* Bottom Controls - Fixed at screen bottom */}
           <div className={`fixed bottom-0 left-0 right-0 z-30 w-full p-4 md:p-6 pb-[max(1rem,env(safe-area-inset-bottom))] flex justify-center items-center gap-3 md:gap-8 bg-parchment-50/95 backdrop-blur-md border-t border-stone-200 transition-opacity duration-300 ${isPaused || showScoring ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
             <button
-              onClick={handlePrev}
+              onClick={actions.handlePrev}
               disabled={round === 1 && phaseIndex === 0}
               className="group flex items-center gap-2 px-4 md:px-6 py-3 rounded-full bg-white border border-stone-300 text-stone-500 hover:text-stone-800 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 shadow-sm"
             >
@@ -563,7 +311,7 @@ const App: React.FC = () => {
             </button>
 
             <button
-              onClick={handleNext}
+              onClick={actions.handleNext}
               className="group flex-1 max-w-[280px] flex items-center justify-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-gradient-to-r from-teal-600 to-teal-500 text-white shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 md:hover:scale-105 transition-all active:scale-95 border-b-2 border-teal-700"
             >
               <span className="font-bold tracking-wider md:tracking-widest text-base md:text-lg whitespace-nowrap">
@@ -575,8 +323,8 @@ const App: React.FC = () => {
             {/* Victory Button in Bottom Bar (Mobile focused) */}
             <button
               onClick={() => {
-                setScoringInitialOutcome('victory');
-                setShowScoring(true);
+                actions.setScoringInitialOutcome('victory');
+                actions.setShowScoring(true);
               }}
               className="flex items-center justify-center p-3 md:p-4 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-900/20 hover:bg-amber-400 transition-all active:scale-90 border-b-2 border-amber-700 sm:hover:scale-110"
               title={t('header.end_game')}
@@ -592,7 +340,7 @@ const App: React.FC = () => {
                 {t('header.paused_overlay')}
               </div>
               <button
-                onClick={togglePause}
+                onClick={actions.togglePause}
                 className="px-8 py-3 rounded-full bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-2 shadow-xl hover:scale-105 transition-all"
               >
                 <Play className="w-5 h-5 fill-current" />
@@ -620,7 +368,7 @@ const App: React.FC = () => {
                 {t('phases.spirit-growth.desc')}
               </p>
               <button
-                onClick={() => setShowSettings(true)}
+                onClick={() => actions.setShowSettings(true)}
                 className="px-10 py-5 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 text-white font-serif font-bold text-xl shadow-xl shadow-amber-900/20 hover:scale-105 hover:shadow-amber-900/30 transition-all flex items-center gap-3 mx-auto"
               >
                 <Play className="w-6 h-6 fill-current" />
@@ -668,10 +416,10 @@ const App: React.FC = () => {
             {history.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 {history.map(game => (
-                  <div
+                  <button
                     key={game.id}
-                    onClick={() => setSelectedGame(game)}
-                    className="bg-white border border-stone-200 rounded-xl p-5 flex items-center justify-between text-left hover:shadow-md hover:border-teal-200 transition-all group relative overflow-hidden cursor-pointer"
+                    onClick={() => actions.setSelectedGame(game)}
+                    className="bg-white w-full border border-stone-200 rounded-xl p-5 flex items-center justify-between text-left hover:shadow-md hover:border-teal-200 transition-all group relative overflow-hidden cursor-pointer outline-none focus:ring-2 focus:ring-teal-400"
                   >
                     <div className={`absolute left-0 top-0 bottom-0 w-2 ${game.outcome === 'victory' ? 'bg-amber-400' : 'bg-stone-300'}`}></div>
                     <div className="flex items-center gap-4 pl-2">
@@ -741,15 +489,22 @@ const App: React.FC = () => {
                           )}
                         </div>
                       )}
-                      <button
-                        onClick={(e) => deleteHistoryItem(game.id, e)}
-                        className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+
+                      {/* Delete button (stop propagation to avoid opening game detail) */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(t('common.confirm_delete'))) {
+                            actions.deleteHistoryItem(game.id);
+                          }
+                        }}
+                        className="p-2 text-stone-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 cursor-pointer"
                         title={t('common.delete')}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             ) : (
@@ -773,8 +528,8 @@ const App: React.FC = () => {
         showSettings && (
           <SettingsDialog
             settings={settings}
-            onSave={handleSaveSettings}
-            onClose={() => setShowSettings(false)}
+            onSave={actions.handleSaveSettings}
+            onClose={() => actions.setShowSettings(false)}
             isInitialSetup={!hasStarted}
           />
         )
@@ -784,8 +539,8 @@ const App: React.FC = () => {
       {showSetup && (
         <SetupDialog
           settings={settings}
-          onConfirm={startGame}
-          onCancel={() => setShowSetup(false)}
+          onConfirm={actions.startGame}
+          onCancel={() => actions.setShowSetup(false)}
         />
       )}
 
@@ -793,32 +548,36 @@ const App: React.FC = () => {
       {showRules && (
         <AdversaryRules
           settings={settings}
-          onClose={() => setShowRules(false)}
+          onClose={() => actions.setShowRules(false)}
         />
       )}
 
       {/* Scoring Dialog */}
       {showScoring && (
         <ScoringDialog
-          playerCount={settings.playerCount}
-          spirits={settings.selectedSpirits}
-          elapsedTime={formatTime(elapsedSeconds)}
-          settings={settings}
-          onClose={() => setShowScoring(false)}
-          onSaveGame={handleGameComplete}
-          currentRound={round}
           initialOutcome={scoringInitialOutcome}
+          settings={settings}
+          elapsedSeconds={elapsedSeconds}
+          rounds={round}
+          onSave={actions.handleGameComplete}
+          onClose={() => actions.setShowScoring(false)}
         />
       )}
 
+      {/* Game Detail Dialog */}
       {selectedGame && (
         <GameDetailDialog
           game={selectedGame}
-          onClose={() => setSelectedGame(null)}
+          onClose={() => actions.setSelectedGame(null)}
+          onDelete={(id) => {
+            if (window.confirm(t('common.confirm_delete'))) {
+              actions.deleteHistoryItem(id);
+              actions.setSelectedGame(null);
+            }
+          }}
         />
       )}
-
-    </div >
+    </div>
   );
 };
 
